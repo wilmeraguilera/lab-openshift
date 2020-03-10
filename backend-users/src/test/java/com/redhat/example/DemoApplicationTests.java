@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.redhat.example;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

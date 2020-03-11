@@ -26,12 +26,18 @@ public class UserResource {
 	private UserRepository userRepository;
 
 	@GetMapping("/users")
-	public List<User> retrieveAllStudents() {
+	public List<User> retrieveAllUsers() {
+		return userRepository.findAll();
+	}
+	
+
+	@GetMapping("/usersAll")
+	public List<User> retrieveAll() {
 		return userRepository.findAll();
 	}
 
 	@GetMapping("/users/{id}")
-	public User retrieveStudent(@PathVariable long id) {
+	public User retrieveUser(@PathVariable long id) {
 		Optional<User> student = userRepository.findById(id);
 
 		if (!student.isPresent())
@@ -41,12 +47,12 @@ public class UserResource {
 	}
 
 	@DeleteMapping("/users/{id}")
-	public void deleteStudent(@PathVariable long id) {
+	public void deleteUser(@PathVariable long id) {
 		userRepository.deleteById(id);
 	}
 
 	@PostMapping("/users")
-	public ResponseEntity<Object> createStudent(@RequestBody User user) {
+	public ResponseEntity<Object> createUser(@RequestBody User user) {
 		User savedUser = userRepository.save(user);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -57,7 +63,7 @@ public class UserResource {
 	}
 	
 	@PutMapping("/users/{id}")
-	public ResponseEntity<Object> updateStudent(@RequestBody User user, @PathVariable long id) {
+	public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable long id) {
 
 		Optional<User> userOptional = userRepository.findById(id);
 

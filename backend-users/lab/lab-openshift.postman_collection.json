@@ -1,0 +1,84 @@
+{
+	"variables": [],
+	"info": {
+		"name": "lab-openshift",
+		"_postman_id": "95a9ad03-679b-93d0-7254-59e7403b32bc",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetAllUsers",
+			"request": {
+				"url": "http://localhost:8080/users",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserById",
+			"request": {
+				"url": "http://localhost:8080/users/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUserById copy",
+			"request": {
+				"url": "http://localhost:8080/users/1",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUser copy",
+			"request": {
+				"url": "http://localhost:8080/users",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"email\": \"wilmeraguilera@gmail.com\",\n        \"lastName\": \"Aguilera\",\n        \"name\": \"Wilmer\",\n        \"phoneNumber\": \"987654321\"\n    }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "EditUser",
+			"request": {
+				"url": "http://localhost:8080/users/1",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"email\": \"wilmeraguilerab@gmail.com\",\n        \"lastName\": \"Aguilera\",\n        \"name\": \"Wilmer\",\n        \"phoneNumber\": \"3115183586\"\n    }"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

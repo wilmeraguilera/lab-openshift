@@ -17,9 +17,9 @@ La alternativas de despliegue que utilizaremos en el taller son las siguientes:
 
 ## Fabric8
 
-Fabric8 es una herramienta que busca facilitar el ciclo de vida de las aplicaciones, con esta utilidad es posible desplegar compilar, realizar test y desplegar nuestras aplicaciones en Openshift o Kubernetes.
+Fabric8 es una herramienta que busca facilitar el ciclo de vida de las aplicaciones, con esta utilidad es posible compilar, probar y desplegar nuestras aplicaciones en Openshift o Kubernetes.
 
-Para realizar el uso de esta utilidad dentro de nuestras aplicaciones existe un plugin de maven que debemos agregar y con un par de configuraciones lograremos realizar los despleigues en Openshift.
+Para realizar el uso de esta utilidad dentro de nuestras aplicaciones existe un plugin de maven que debemos agregar y con un par de configuraciones lograremos realizar los despliegues en Openshift.
 
 
 Lo primero que realizaremos será la creación del proyecto dentro de openshift.

@@ -43,18 +43,47 @@ Debemos ver una salida en consola que nos indique que la compilación fué satis
 
 Revisar el pom.xml y analizar la definición del plugin de fabric8-maven-plugin
 
-```<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+```
+<plugins>
+	<plugin>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-maven-plugin</artifactId>
+	</plugin>
+	<plugin>
+		<groupId>io.fabric8</groupId>
+		<artifactId>fabric8-maven-plugin</artifactId>
+		<version>4.4.0</version>
+	</plugin>
+</plugins>
+```
 
+En dicho archivo tambien está definido un profile de maven que nos permite que las fases de fabric8 se vinculen 
+a las fases de maven. De esta manera se logra que al ejecutar `mvn install ` se ejecuten la tareas `resource build deploy`
+
+
+```
+<profiles>
+	<profile>
+	<id>openshift</id>
+	<build>
+		<plugins>
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>fabric8-maven-plugin</artifactId>
-				<version>4.4.0</version>
+				<executions>
+					<execution>
+						<id>fmp</id>
+						<goals>
+							<goal>resource</goal>
+							<goal>build</goal>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
+	</build>
+</profile>
 ```
 
 

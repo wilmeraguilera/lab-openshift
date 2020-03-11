@@ -41,3 +41,21 @@ Debemos ver una salida en consola que nos indique que la compilación fué satis
 [INFO] ------------------------------------------------------------------------
 ```
 
+Revisar el pom.xml y analizar la definición del plugin de fabric8-maven-plugin
+
+```<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>fabric8-maven-plugin</artifactId>
+				<version>4.4.0</version>
+			</plugin>
+		</plugins>
+```
+
+
+

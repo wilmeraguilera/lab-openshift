@@ -7,3 +7,8 @@ El repositorio de los fuentes es el siguiente:
 https://github.com/wilmeraguilera/lab-openshift
 
 Dentro de este repositorio existe un subdirectorio llamado backend-users que contiene el api que desplegaremos.
+
+La alternativas de despliegue que utilizaremos en el taller son las siguientes:
+- Fabric8
+- Source2Image
+- DockerFile

@@ -51,7 +51,7 @@ podTemplate(
     
     
     stage('Build App') {
-      dir("smartvista-apigate-proxy"){
+      dir("backend-users"){
       	 echo "Building version ${devTag}"
       	 sh "mvn clean install -DskipTests"
       	 echo "Building complete version ${devTag}"

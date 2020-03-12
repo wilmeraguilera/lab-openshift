@@ -58,6 +58,16 @@ podTemplate(
       }     
     }
     
+     //End of the build step
+    stage('Unit Tests') {
+     dir("backend-users"){ 
+	       stage('Unit Tests') {         
+		  		echo "Running Unit Tests"
+		  		sh "mvn  test"
+			  }
+		  }  
+    }
+    
     
  }
 }

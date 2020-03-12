@@ -1,0 +1,77 @@
+// Jenkinsfile for Comercios y Terminales - 
+// Set the tag for the development image: version + build number
+def devTag      = "0.0-0"
+// Set the tag for the production image: version
+def prodTag     = "0.0"
+def artifact	= ""
+def destApp = "" 
+def activeApp = ""
+podTemplate(
+  label: "maven-pod",
+  cloud: "openshift",
+  inheritFrom: "maven",
+  containers: [
+    containerTemplate(
+      name: "jnlp",
+      image: "docker-registry.default.svc:5000/jenkins/jenkins-agent-maven-35-rhel7",
+      resourceRequestMemory: "1Gi",
+      resourceLimitMemory: "2Gi",
+      resourceRequestCpu: "1",
+      resourceLimitCpu: "1"
+    )
+  ]
+) 
+
+{
+  node('maven-pod') {
+    echo "Smart Vista Apigate Poxy Pipeline Start"
+    
+    // Checkout Source Code
+    stage('Checkout Source') {
+     
+	  checkout scm
+	  
+	  dir("backend-users"){
+	  	def pom = 'pom.xml'
+      	def version = getVersionFromPom(pom)
+      	// TBD: Set the tag for the development image: version + build number.
+      	// Example: def devTag  = "0.0-0"
+      	devTag  = "${version}-" + currentBuild.number
+      	// TBD: Set the tag for the production image: version
+      	// Example: def prodTag = "0.0"
+      	prodTag = "${version}"
+	  	artifact = getArtifactIdFromPom(pom)	    	
+	  }
+	  
+	    
+	  echo "Devtag: ${devTag}"      	
+    }
+    //end of the checkout stage
+    
+    
+    
+    stage('Build App') {
+      dir("smartvista-apigate-proxy"){
+      	 echo "Building version ${devTag}"
+      	 sh "mvn clean install -DskipTests"
+      	 echo "Building complete version ${devTag}"
+      }     
+    }
+    
+    
+ }
+}
+
+// Convenience Functions to read variables from the pom.xml
+def getVersionFromPom(pom) {
+  def matcher = readFile(pom) =~ '<version>(.+)</version>'
+  matcher ? matcher[0][1] : null
+}
+def getGroupIdFromPom(pom) {
+  def matcher = readFile(pom) =~ '<groupId>(.+)</groupId>'
+  matcher ? matcher[0][1] : null
+}
+def getArtifactIdFromPom(pom) {
+  def matcher = readFile(pom) =~ '<artifactId>(.+)</artifactId>'
+  matcher ? matcher[0][1] : null
+}

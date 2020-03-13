@@ -25,7 +25,7 @@ podTemplate(
 ) 
 
 {
-  node('Jenkins') {
+  node() {
     echo "Api Users Pipeline Start"
     
     // Checkout Source Code

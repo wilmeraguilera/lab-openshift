@@ -139,6 +139,7 @@ podTemplate(
       sh "oc rollout latest dc/api-users -n dev-admin-users"
       echo "Termina Deploy"    
     }
+  }
 }
 
 // Convenience Functions to read variables from the pom.xml

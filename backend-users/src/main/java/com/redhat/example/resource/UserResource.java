@@ -24,6 +24,11 @@ public class UserResource {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@GetMapping("/healthcheck")
+	public String healthcheck() {
+		return "UP!";
+	}
 
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers() {

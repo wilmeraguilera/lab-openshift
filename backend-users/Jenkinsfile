@@ -128,17 +128,12 @@ podTemplate(
 
 
     stage('Create Image'){
-     echo "Inicia creación image"
-     echo devTag
-     echo prodTag
+      echo "Inicia creación image"
+      echo devTag
+      echo prodTag
+      sh "oc start-build api-users --from-file=./target/backend-users-${version}.jar --wait=true -n dev-admin-users"
 
-     openshift.withCluster() {
-       openshift.withProject("dev-admin-users") {
-         openshift.selector("bc", "api-users").startBuild("--from-file=./target/backend-users-${version}.jar", "--wait=true")
 
-         openshift.tag("api-users:latest", "api-users:${devTag}")
-       }
-       }
      echo "Termina creación image"
    }
 

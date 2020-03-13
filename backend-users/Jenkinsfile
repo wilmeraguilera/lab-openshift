@@ -1,3 +1,6 @@
+import groovy.json.JsonSlurperClassic
+
+
 // Jenkinsfile for Api-users - 
 // Set the tag for the development image: version + build number
 def devTag      = "0.0-0"

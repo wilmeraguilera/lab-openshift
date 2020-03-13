@@ -121,7 +121,7 @@ podTemplate(
         //Public in repository
 		stage('Publish to Nexus') {
 			echo "Publish to Nexus"
-			sh "${mvnCmd}  deploy -DskipTests=true  -s ./configuration/settings.xml "
+			sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings.xml"
 			
 		}
     

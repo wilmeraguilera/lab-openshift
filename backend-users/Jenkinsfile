@@ -142,7 +142,7 @@ podTemplate(
       echo "deploymentConfig: "+deploymentConfig;
 
       def deploymentConfigJson = new JsonSlurperClassic().parseText(deploymentConfig)
-      echo "Version dc: ${data.status.latestVersion}"
+      echo "Version dc: ${deploymentConfigJson.status.latestVersion}"
       
       echo "Termina Deploy"    
     }

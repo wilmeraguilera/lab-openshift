@@ -8,6 +8,7 @@ def artifact	= ""
 def destApp = "" 
 def activeApp = ""
 
+/*
 podTemplate(
   label: "maven-pod",
   cloud: "openshift",
@@ -22,10 +23,10 @@ podTemplate(
       resourceLimitCpu: "1"
     )
   ]
-) 
+) */
 
 {
-  node('maven-pod') {
+  node() {
     echo "Api Users Pipeline Start"
     
     // Checkout Source Code

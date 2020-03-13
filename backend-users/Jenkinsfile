@@ -139,10 +139,10 @@ podTemplate(
       sh "oc rollout latest dc/api-users -n dev-admin-users"
       
       def deploymentConfig = sh(script:"oc get dc/api-users -o=json -n dev-admin-users" , returnStdout:true);
-
       echo "deploymentConfig: "+deploymentConfig;
 
-      echo "Latest Deployment: "+deploymentConfig.status.latestVersion 
+      def deploymentConfigJson = new JsonSlurperClassic().parseText(deploymentConfig)
+      echo "Version dc: ${data.status.latestVersion}"
       
       echo "Termina Deploy"    
     }

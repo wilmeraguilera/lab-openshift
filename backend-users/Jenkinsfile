@@ -27,6 +27,27 @@ podTemplate(
 {
   node() {
     echo "Api Users Pipeline Start"
+
+
+
+    stage('Preparing'){
+			mvnHome = tool 'm2'
+
+			// Define Maven Command. Make sure it points to the correct
+			// settings for our Nexus installation (use the service to
+			// bypass the router). The file settings.xml
+			// needs to be in the Source Code repository.
+
+			mvnCmd = "${mvnHome}/bin/mvn "
+
+
+			env.JAVA_HOME=tool 'JDK18'
+			env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+			sh 'java -version'
+
+
+		}
+
     
     // Checkout Source Code
     stage('Checkout Source') {
@@ -58,7 +79,7 @@ podTemplate(
     stage('Build App') {
       dir("backend-users"){
       	 echo "Building version ${devTag}"
-      	 sh "mvn clean install -DskipTests -s ./configuration/settings.xml"
+      	 sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings.xml"
       	 echo "Building complete version ${devTag}"
       }     
     }
@@ -67,7 +88,7 @@ podTemplate(
     stage('Unit Tests') {
      dir("backend-users"){      
 		  		echo "Running Unit Tests"
-		  		sh "mvn  test -s ./configuration/settings.xml"
+		  		sh "${mvnCmd}  test -s ./configuration/settings.xml"
 		  }  
     }
 
@@ -96,7 +117,7 @@ podTemplate(
         //Public in repository
 		stage('Publish to Nexus') {
 			echo "Publish to Nexus"
-			sh "mvn  deploy -DskipTests=true  -s ./configuration/settings.xml "
+			sh "${mvnCmd}  deploy -DskipTests=true  -s ./configuration/settings.xml "
 			
 		}
     

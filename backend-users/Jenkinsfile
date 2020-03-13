@@ -101,7 +101,7 @@ podTemplate(
   			withSonarQubeEnv('sonar') {
   			
   					sh "${mvnCmd} sonar:sonar " +
-  					"-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports -Dsonar.jacoco.reportPaths=target/jacoco.exec -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings.xml"
+  					"-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings.xml"
 			
   			}
 			sleep(10)

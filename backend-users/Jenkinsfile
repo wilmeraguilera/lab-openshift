@@ -132,9 +132,7 @@ podTemplate(
       echo devTag
       echo prodTag
       sh "oc start-build api-users --from-file=./target/backend-users-${version}.jar --wait=true -n dev-admin-users"
-
-
-     echo "Termina creación image"
+      echo "Termina creación image"
    }
 
     

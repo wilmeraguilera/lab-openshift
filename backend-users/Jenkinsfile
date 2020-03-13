@@ -125,6 +125,23 @@ podTemplate(
         sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings.xml"
       }
 		}
+
+
+    stage('Create Image'){
+     echo "Inicia creación image"
+     echo devTag
+     echo prodTag
+
+     openshift.withCluster() {
+       openshift.withProject("dev-admin-users") {
+         openshift.selector("bc", "api-users").startBuild("--from-file=./target/backend-users-${version}.jar", "--wait=true")
+
+         openshift.tag("api-users:latest", "api-users:${devTag}")
+       }
+       }
+     echo "Termina creación image"
+   }
+
     
     
  }

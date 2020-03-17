@@ -86,5 +86,40 @@ a las fases de maven. De esta manera se logra que al ejecutar `mvn install ` se 
 </profile>
 ```
 
+# Docker
+
+Openshift permite la Openshift da la posibilidad de trabajar con Imágenes docker como base para nuestras aplicaciones,  y también el desarrollador tiene la posibilidad de crear nuevas imágenes para sus aplicaciones a partir de archivos Dockerfile personalizados.
+
+Para generar las imágenes mediente un archivo Dockerfile se debe crear un Build Configuración de tipo binario y cuya estrategia sea Docker. Posteriormente se debe lanzar el Build y enviar los archivos binarios requeridos para la construcción de la imagen.
+
+
+Al momento de iniciar el build se deben enviar los archivos requeridos para la construcción de la imagen.
+
+A nivel de argumentos se tienen las siguientes posibilidades:
+
+- (--from-file)
+- (--from-directory)
+- (--from-archive)
+- (--from-repo)
+
+
+Comando para crear el Build de tipo Binario y con strategia Docker. Debe exitir en la raiz del proyecto el archivo de docker con el siguiente nombre  ```Dockerfile```
+
+```
+oc new-build --strategy docker --binary --name myapp
+```
+
+Comando para iniciar el Build enviando como parámetro el directorio de los fuentes y binarios del proyecto. Debo estar ubicado en el directorio del proyecto el cual deseo sea referenciado en el Build.
+
+```
+oc start-build myapp --from-dir=.
+```
+
+
+
+
+
+
+
 
 

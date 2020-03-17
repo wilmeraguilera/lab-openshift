@@ -97,10 +97,10 @@ Al momento de iniciar el build se deben enviar los archivos requeridos para la c
 
 A nivel de argumentos se tienen las siguientes posibilidades:
 
-(--from-file)
-(--from-directory)
-(--from-archive)
-(--from-repo)
+- (--from-file)
+- (--from-directory)
+- (--from-archive)
+- (--from-repo)
 
 
 Comando para crear el Build

@@ -103,7 +103,7 @@ A nivel de argumentos se tienen las siguientes posibilidades:
 - (--from-repo)
 
 
-Comando para crear el Build
+Comando para crear el Build de tipo Binario y con strategia Docker. Debe exitir en la raiz del proyecto el archivo de docker con el siguiente nombre  ```Dockerfile
 
 ```
 oc new-build --strategy docker --binary --name myapp

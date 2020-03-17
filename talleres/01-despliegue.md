@@ -93,4 +93,33 @@ Openshift permite la Openshift da la posibilidad de trabajar con Imágenes docke
 Para generar las imágenes mediente un archivo Dockerfile se debe crear un Build Configuración de tipo binario y cuya estrategia sea Docker. Posteriormente se debe lanzar el Build y enviar los archivos binarios requeridos para la construcción de la imagen.
 
 
+Al momento de iniciar el build se deben enviar los archivos requeridos para la construcción de la imagen.
+
+A nivel de argumentos se tienen las siguientes posibilidades:
+
+(--from-file)
+(--from-directory)
+(--from-archive)
+(--from-repo)
+
+
+Comando para crear el Build
+
+```
+oc new-build --strategy docker --binary --name myapp
+```
+
+Comando para iniciar el Build enviando como parametro el directorio de los fuentes y binarios del proyecto.
+
+```
+oc start-build myapp --from-dir=.
+```
+
+
+
+
+
+
+
+
 

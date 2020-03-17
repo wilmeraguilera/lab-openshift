@@ -109,7 +109,7 @@ Comando para crear el Build de tipo Binario y con strategia Docker. Debe exitir 
 oc new-build --strategy docker --binary --name myapp
 ```
 
-Comando para iniciar el Build enviando como parametro el directorio de los fuentes y binarios del proyecto. Debo estar unicado en el directorio del proyecto el cual deseo sea referenciado en el Build.
+Comando para iniciar el Build enviando como parámetro el directorio de los fuentes y binarios del proyecto. Debo estar ubicado en el directorio del proyecto el cual deseo sea referenciado en el Build.
 
 ```
 oc start-build myapp --from-dir=.

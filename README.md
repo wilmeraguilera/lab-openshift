@@ -5,7 +5,7 @@ y conocer las alternativas que se tienen para realizar este proceso.
 
 ## Tabla de Contenido
 
-1. [Despliegue de aplicaciones](talleres/01-despliegue.md)
+1. [Despliegue de aplicaciones](labs/01-despliegue.md)
 
 
 

@@ -3,6 +3,6 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 8090
+      port: 8080
       protocol: TCP
-      targetPort: 8090
+      targetPort: 8080

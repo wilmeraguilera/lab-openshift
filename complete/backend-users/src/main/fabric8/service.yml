@@ -1,0 +1,8 @@
+metadata:
+   name: backend-users
+spec:
+  ports:
+    - name: http
+      port: 8090
+      protocol: TCP
+      targetPort: 8090

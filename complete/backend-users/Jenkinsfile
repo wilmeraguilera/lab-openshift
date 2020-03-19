@@ -36,13 +36,13 @@ podTemplate(
       parameters(
           [
             string(name: 'namespace', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift'),
-            string(name: 'app-name', defaultValue: 'api-users', description:'Application name')
+            string(name: 'appName', defaultValue: 'api-users', description:'Application name')
           ]
         )
     ])
 
     echo "Namespace: ${params.namespace}"
-    echo "Application name: ${params.app-name}"
+    echo "Application name: ${params.appName}"
 
 
 

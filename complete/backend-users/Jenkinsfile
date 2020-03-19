@@ -32,7 +32,7 @@ podTemplate(
   node() {
 
 
-    properties([parameters([string(name: 'namespace', defaultValue: 'dev_api_users', description:'Nombre del proyecto en Openshift')])])
+    properties([parameters([string(name: 'namespace', defaultValue: 'dev_admin_users', description:'Nombre del proyecto en Openshift')])])
 
     echo "Api Users Pipeline Start: ${params.namespace}"
 
@@ -130,8 +130,8 @@ podTemplate(
         echo "Inicia creación image"
         echo devTag
         echo prodTag
-        sh "oc start-build api-users --from-file=./target/backend-users-${version}.jar --wait=true -n dev-admin-users"
-        sh "oc tag api-users:latest api-users:${devTag} -n dev-admin-users"
+        sh "oc start-build api-users --from-file=./target/backend-users-${version}.jar --wait=true -n ${params.namespace}"
+        sh "oc tag api-users:latest api-users:${devTag} -n ${params.namespace}"
         echo "Termina creación image"
       }
     }
@@ -140,14 +140,14 @@ podTemplate(
 
     stage('Deploy to DEV'){
 	    echo "Inicia Deploy"
-      sh "oc set image dc/api-users api-users=dev-admin-users/api-users:${devTag} --source=imagestreamtag -n dev-admin-users"
-      sh "oc rollout latest dc/api-users -n dev-admin-users"
+      sh "oc set image dc/api-users api-users=${params.namespace}/api-users:${devTag} --source=imagestreamtag -n ${params.namespace}"
+      sh "oc rollout latest dc/api-users -n ${params.namespace}"
       
-      def dc_version = sh(script:"oc get dc/api-users -o=yaml -n dev-admin-users | grep 'latestVersion'| cut -d':' -f 2" , returnStdout:true).trim();
+      def dc_version = sh(script:"oc get dc/api-users -o=yaml -n ${params.namespace} | grep 'latestVersion'| cut -d':' -f 2" , returnStdout:true).trim();
       echo "Version de DeploymentConfig Actual ${dc_version}"
       
-      def rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-      def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+      def rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+      def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
 
 	    echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
 	  
@@ -159,8 +159,8 @@ podTemplate(
       while ((rc_replicas != rc_replicas_ready)&&countInterActual <=countIterMax) {
 			  sleep 5
 
-        rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-				rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+        rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+				rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
 
         echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
 
@@ -169,7 +169,7 @@ podTemplate(
 				if (countInterActual>countIterMax){
 				  echo "Se ha superado el tiempo de espera para el despliegue"
 					echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
-					sh "oc rollout cancel dc/api-users -n dev-admin-users"
+					sh "oc rollout cancel dc/api-users -n ${params.namespace}"
 					throw new Exception("Se ha superado el tiempo de espera para el despliegue")
 				}
         echo "Termina Deploy"  

@@ -12,54 +12,30 @@ def destApp = ""
 def activeApp = ""
 
 
-podTemplate(
-  label: "maven-pod",
-  cloud: "openshift",
-  inheritFrom: "maven",
-  containers: [
-    containerTemplate(
-      name: "jnlp",
-      image: "docker-registry.default.svc:5000/jenkins/jenkins-agent-maven-35-rhel7",
-      resourceRequestMemory: "1Gi",
-      resourceLimitMemory: "2Gi",
-      resourceRequestCpu: "1",
-      resourceLimitCpu: "1"
-    )
-  ]
-) 
-
-{
-  node() {
 
 
-    parameters{
-        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-    }
+pipeline {
+    agent any
+    stages {
+      stage('Preparing'){
+      mvnHome = tool 'm2'
 
-    echo "Api Users Pipeline Start"
+            // Define Maven Command. Make sure it points to the correct
+            // settings for our Nexus installation (use the service to
+            // bypass the router). The file settings.xml
+            // needs to be in the Source Code repository.
 
-
-
-    stage('Preparing'){
-			mvnHome = tool 'm2'
-
-			// Define Maven Command. Make sure it points to the correct
-			// settings for our Nexus installation (use the service to
-			// bypass the router). The file settings.xml
-			// needs to be in the Source Code repository.
-
-			mvnCmd = "${mvnHome}/bin/mvn "
+            mvnCmd = "${mvnHome}/bin/mvn "
 
 
-			env.JAVA_HOME=tool 'JDK18'
-			env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-			sh 'java -version'
+            env.JAVA_HOME=tool 'JDK18'
+            env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+            sh 'java -version'
 
 
-		}
+          }
 
-    
-    // Checkout Source Code
+            // Checkout Source Code
     stage('Checkout Source') {
 	    checkout scm  
       dir("complete/backend-users"){
@@ -74,110 +50,9 @@ podTemplate(
     }
     //end of the checkout stage
     
-    
-    
-    stage('Build App') {
-      dir("complete/backend-users"){
-      	 echo "Building version ${devTag}"
-      	 sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings.xml"
-      	 echo "Building complete version ${devTag}"
-      }     
+
+
     }
-    
-     //End of the build step
-    stage('Unit Tests') {
-     dir("complete/backend-users"){      
-		  		echo "Running Unit Tests"
-		  		sh "${mvnCmd}  test -s ./configuration/settings.xml"
-		  }  
-    }
-
-
-    stage('SonarQube Scan') {
-
-      dir("complete/backend-users"){  
-
-        echo "Init Running Code Analysis"
-          withSonarQubeEnv('sonar') {
-          
-              sh "${mvnCmd} sonar:sonar " +
-              "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings.xml"
-        
-          }
-        sleep(10)
-        
-        timeout(time: 1, unit: 'MINUTES') {
-                def qg = waitForQualityGate()
-                if (qg.status != 'OK') {
-                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                }
-        }
-        echo "End Running Code Analysis"
-
-
-      }
-    }
-
-        //Public in repository
-		stage('Publish to Nexus') {
-      dir("complete/backend-users"){   
-        echo "Publish to Nexus"
-        sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings.xml"
-      }
-		}
-
-
-    stage('Create Image'){
-      dir("complete/backend-users"){
-        echo "Inicia creación image"
-        echo devTag
-        echo prodTag
-        sh "oc start-build api-users --from-file=./target/backend-users-${version}.jar --wait=true -n dev-admin-users"
-        sh "oc tag api-users:latest api-users:${devTag} -n dev-admin-users"
-        echo "Termina creación image"
-      }
-    }
-
-
-
-    stage('Deploy to DEV'){
-	    echo "Inicia Deploy"
-      sh "oc set image dc/api-users api-users=dev-admin-users/api-users:${devTag} --source=imagestreamtag -n dev-admin-users"
-      sh "oc rollout latest dc/api-users -n dev-admin-users"
-      
-      def dc_version = sh(script:"oc get dc/api-users -o=yaml -n dev-admin-users | grep 'latestVersion'| cut -d':' -f 2" , returnStdout:true).trim();
-      echo "Version de DeploymentConfig Actual ${dc_version}"
-      
-      def rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-      def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
-
-	    echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
-	  
-	  
-	  
-	    def countIterMax=20
-	    def countInterActual=0
-
-      while ((rc_replicas != rc_replicas_ready)&&countInterActual <=countIterMax) {
-			  sleep 5
-
-        rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-				rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
-
-        echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
-
-        countInterActual = countInterActual + 1
-				echo "Iteracion Actual: "+countInterActual
-				if (countInterActual>countIterMax){
-				  echo "Se ha superado el tiempo de espera para el despliegue"
-					echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
-					sh "oc rollout cancel dc/api-users -n dev-admin-users"
-					throw new Exception("Se ha superado el tiempo de espera para el despliegue")
-				}
-        echo "Termina Deploy"  
-      }  
-    }
-  }
 }
 
 // Convenience Functions to read variables from the pom.xml

@@ -32,9 +32,9 @@ podTemplate(
   node() {
 
 
-    properties([parameters([string(name: 'namespace', defaultValue: 'dev_api_users')])])
+    properties([parameters([string(name: 'namespace', defaultValue: 'dev_api_users', description:'Nombre del proyecto en Openshift')])])
 
-    echo "Api Users Pipeline Start"
+    echo "Api Users Pipeline Start: ${params.namespace}"
 
 
 

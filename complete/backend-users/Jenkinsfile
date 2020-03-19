@@ -32,7 +32,7 @@ podTemplate(
   node() {
 
 
-    properties([parameters([string(name: 'BRANCH', defaultValue: 'master')])])
+    properties([parameters([string(name: 'namespace', defaultValue: 'dev_api_users')])])
 
     echo "Api Users Pipeline Start"
 

@@ -153,7 +153,12 @@ podTemplate(
 
       while ((rc_replicas != rc_replicas_ready)&&countInterActual <=countIterMax) {
 			  sleep 5
+
+        rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
 				rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+
+        echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+
         countInterActual = countInterActual + 1
 				echo "Iteracion Actual: "+countInterActual
 				if (countInterActual>countIterMax){

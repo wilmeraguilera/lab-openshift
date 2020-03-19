@@ -138,11 +138,31 @@ podTemplate(
       sh "oc set image dc/api-users api-users=dev-admin-users/api-users:${devTag} --source=imagestreamtag -n dev-admin-users"
       sh "oc rollout latest dc/api-users -n dev-admin-users"
       
-      def deploymentConfig = sh(script:"oc get dc/api-users -o=json -n dev-admin-users" , returnStdout:true);
-      echo "deploymentConfig: "+deploymentConfig;
+      def dc_version = sh(script:"oc get dc/api-users -o=json -n dev-admin-users | grep 'latestVersion' |cut -d':' -f 2" , returnStdout:true);
+      echo "Version de DeploymentConfig Actual ${dc_version}"
+      
+      def rc_replicas = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+      def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
 
-     
-      echo "Termina Deploy"    
+	    echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+	  
+	  
+	  
+	    def countIterMax=20
+	    def countInterActual=0
+
+      while ((rc_replicas != rrc_replicas_ready)&&countInterActual <=countIterMax) {
+			  sleep 5
+				rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+        countInterActual = countInterActual + 1
+				echo "Iteracion Actual: "+countInterActual
+				if (countInterActual>countIterMax){
+				  echo "Se ha superado el tiempo de espera para el despliegue"
+					echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
+					sh "oc rollout cancel dc/api-users -n dev-admin-users"
+					throw new Exception("Se ha superado el tiempo de espera para el despliegue")
+				}
+        echo "Termina Deploy"    
     }
   }
 }

@@ -1,6 +1,3 @@
-import groovy.json.JsonSlurperClassic
-
-
 // Jenkinsfile for Api-users - 
 // Set the tag for the development image: version + build number
 def devTag      = "0.0-0"
@@ -144,9 +141,7 @@ podTemplate(
       def deploymentConfig = sh(script:"oc get dc/api-users -o=json -n dev-admin-users" , returnStdout:true);
       echo "deploymentConfig: "+deploymentConfig;
 
-      def deploymentConfigJson = new JsonSlurperClassic().parseText(deploymentConfig)
-      echo "Version dc: ${deploymentConfigJson.status.latestVersion}"
-      
+     
       echo "Termina Deploy"    
     }
   }

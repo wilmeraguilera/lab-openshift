@@ -58,7 +58,7 @@ podTemplate(
     // Checkout Source Code
     stage('Checkout Source') {
 	    checkout scm  
-      dir("backend-users"){
+      dir("complete/backend-users"){
         def pom = 'pom.xml'
         version = getVersionFromPom(pom)
         echo version;
@@ -73,7 +73,7 @@ podTemplate(
     
     
     stage('Build App') {
-      dir("backend-users"){
+      dir("complete/backend-users"){
       	 echo "Building version ${devTag}"
       	 sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings.xml"
       	 echo "Building complete version ${devTag}"
@@ -91,7 +91,7 @@ podTemplate(
 
     stage('SonarQube Scan') {
 
-      dir("backend-users"){  
+      dir("complete/backend-users"){  
 
         echo "Init Running Code Analysis"
           withSonarQubeEnv('sonar') {
@@ -116,7 +116,7 @@ podTemplate(
 
         //Public in repository
 		stage('Publish to Nexus') {
-      dir("backend-users"){   
+      dir("complete/backend-users"){   
         echo "Publish to Nexus"
         sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings.xml"
       }
@@ -124,7 +124,7 @@ podTemplate(
 
 
     stage('Create Image'){
-      dir("backend-users"){
+      dir("complete/backend-users"){
         echo "Inicia creación image"
         echo devTag
         echo prodTag

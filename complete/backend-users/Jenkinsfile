@@ -151,7 +151,7 @@ podTemplate(
 	    def countIterMax=20
 	    def countInterActual=0
 
-      while ((rc_replicas != rrc_replicas_ready)&&countInterActual <=countIterMax) {
+      while ((rc_replicas != rc_replicas_ready)&&countInterActual <=countIterMax) {
 			  sleep 5
 				rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/api-users-${dc_version} -o yaml -n dev-admin-users |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
         countInterActual = countInterActual + 1

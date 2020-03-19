@@ -162,7 +162,8 @@ podTemplate(
 					sh "oc rollout cancel dc/api-users -n dev-admin-users"
 					throw new Exception("Se ha superado el tiempo de espera para el despliegue")
 				}
-        echo "Termina Deploy"    
+        echo "Termina Deploy"  
+      }  
     }
   }
 }

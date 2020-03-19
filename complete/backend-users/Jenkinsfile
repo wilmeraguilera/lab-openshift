@@ -55,19 +55,19 @@ podTemplate(
 
 
 		}
-    dir("complete/backend-users"){
+    
     
     // Checkout Source Code
     stage('Checkout Source') {
 	    checkout scm  
-      
+      dir("complete/backend-users"){
         def pom = 'pom.xml'
         version = getVersionFromPom(pom)
         echo version;
 
         devTag  = "${version}-" + currentBuild.number
         artifact = getArtifactIdFromPom(pom)	    	
-        
+      }
 	    echo "Devtag: ${devTag}"      	
     }
     //end of the checkout stage
@@ -75,12 +75,11 @@ podTemplate(
     
     
     stage('Build App') {
-      
+      dir("complete/backend-users"){
       	 echo "Building version ${devTag}"
       	 sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings.xml"
       	 echo "Building complete version ${devTag}"
-         
-    }
+      }     
     }
     
      //End of the build step

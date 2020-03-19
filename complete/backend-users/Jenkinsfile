@@ -25,16 +25,19 @@ pipeline {
 
             // Checkout Source Code
     stage('Checkout Source') {
-	    checkout scm  
-      dir("complete/backend-users"){
-        def pom = 'pom.xml'
-        version = getVersionFromPom(pom)
-        echo version;
 
-        devTag  = "${version}-" + currentBuild.number
-        artifact = getArtifactIdFromPom(pom)	    	
-      }	    
-	    echo "Devtag: ${devTag}"      	
+      steps {
+        checkout scm  
+        dir("complete/backend-users"){
+          def pom = 'pom.xml'
+          version = getVersionFromPom(pom)
+          echo version;
+
+          devTag  = "${version}-" + currentBuild.number
+          artifact = getArtifactIdFromPom(pom)	    	
+        }	    
+        echo "Devtag: ${devTag}"
+      }      	
     }
     //end of the checkout stage
     

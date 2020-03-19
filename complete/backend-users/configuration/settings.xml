@@ -4,7 +4,7 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <mirrors>
     <mirror>
-      <id>Nexus</id>
+      <id>nexus</id>
       <name>Nexus Public Mirror</name>
       <url>http://nexus3-nexus.apps.na311.openshift.opentlc.com/repository/maven-public/</url>
       <mirrorOf>*</mirrorOf>
@@ -12,7 +12,7 @@
   </mirrors>
   <servers>
     <server>
-      <id>Nexus</id>
+      <id>nexus</id>
       <username>admin</username>
       <password>admin123</password>
     </server>

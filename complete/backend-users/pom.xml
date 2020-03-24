@@ -76,7 +76,7 @@
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>fabric8-maven-plugin</artifactId>
-				<version>4.4.0</version>
+				<version>3.5.42</version>
 
 			</plugin>
 			
@@ -121,6 +121,21 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>fabric8-maven-plugin</artifactId>
+						
+						<configuration>
+							<generator>
+								<includes>
+									<include>spring-boot</include>
+								</includes>
+								<config>
+									<spring-boot>
+										<from>fabric8/s2i-java:latest-java11</from>
+										<fromMode>docker</fromMode>
+									</spring-boot>
+								</config>
+							</generator>
+						</configuration>
+				
 						<executions>
 							<execution>
 								<goals>

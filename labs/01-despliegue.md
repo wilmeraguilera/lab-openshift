@@ -76,7 +76,6 @@ a las fases de maven. De esta manera se logra que al ejecutar `mvn install ` se 
 						<goals>
 							<goal>resource</goal>
 							<goal>build</goal>
-							<goal>deploy</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -100,7 +99,7 @@ Para lanzar la compilación y tambien ejecutar los procesos de Fabric8 (resource
 
 
 ```
-mvn install -P openshift
+mvn fabric8:deploy -P openshift 
 ```
 
 Con este comando se debe realizar la construcción de la imagen y despliegue de la app en openshift.

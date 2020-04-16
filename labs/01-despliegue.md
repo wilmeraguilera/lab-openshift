@@ -25,7 +25,7 @@ Para realizar el uso de esta utilidad dentro de nuestras aplicaciones existe un 
 Realizar la compilación del proyecto de manera local mediente el uso de maven.
 
 ```
-mvn instal
+mvn install
 ```
 
 Debemos ver una salida en consola que nos indique que la compilación fué satisfactoria, deberia ser similar a la siguiente:
@@ -85,6 +85,26 @@ a las fases de maven. De esta manera se logra que al ejecutar `mvn install ` se 
 	</build>
 </profile>
 ```
+
+Para hacer uso de fabric8 para el despliegue en openshift es necesario estar auntenticados con el cliente oc y ubicarnos en el proyecto donde deseamos se realice el despliegue de la aplicación.
+
+Para crear un nuevo proyecto en openshift debemos ejecutar el siguiernte comando.
+
+```
+oc new-project dev-api-rest-f8
+```
+
+Para seleccionar un proyecto existente debemos ejecutar el comando `oc project dev-api-rest-f8`
+
+Para lanzar la compilación y tambien ejecutar los procesos de Fabric8 (resource, build y deploy), se debe ejecutar el siguiente comando.
+
+
+```
+mvn install -P openshift
+```
+
+Con este comando se debe realizar la construcción de la imagen y despliegue de la app en openshift.
+
 
 
 ## Docker

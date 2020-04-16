@@ -87,7 +87,7 @@ a las fases de maven. De esta manera se logra que al ejecutar `mvn install ` se 
 ```
 
 
-# Docker
+## Docker
 
 Openshift permite la Openshift da la posibilidad de trabajar con Imágenes docker como base para nuestras aplicaciones,  y también el desarrollador tiene la posibilidad de crear nuevas imágenes para sus aplicaciones a partir de archivos Dockerfile personalizados.
 
@@ -118,15 +118,14 @@ oc start-build myapp --from-dir=.
 
 
 
-# Source2Image S2I
+## Source2Image S2I
 
 Openshift proporciona un mecanismo de despliegue que permite la generación de imagenes a partir del código fuente de nuestra aplicación + una imagen base.
-Para este caso particular Openshift se encarga del proceso de compilación y luego toma los binarios generados, los integra a la imagen base y aspi se genera una nueva imagen con nuestra aplicación.
+En este caso Openshift se encargará del proceso de compilación y luego toma los binarios generados, los integra a la imagen base y así se genera una nueva imagen con nuestra App.
 
 Para el caso de nuestra aplicación de ejemplo en la cual usamos maven, openshift requiere de acceso a internet para la descarga de las dependencias.
 
 A continuación se muestra el comando para la creación de la aplicación:
-
 
 ```
 oc new-app openshift/openjdk18-openshift~https://github.com/wilmeraguilera/lab-openshift/ --context-dir=backend-users --strategy=source

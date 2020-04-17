@@ -2,14 +2,14 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-<!--   <mirrors> -->
-<!--     <mirror> -->
-<!--       <id>nexus</id> -->
-<!--       <name>Nexus Public Mirror</name> -->
-<!--       <url>http://nexus3-nexus.apps.na311.openshift.opentlc.com/repository/maven-public/</url> -->
-<!--       <mirrorOf>*</mirrorOf> -->
-<!--     </mirror> -->
-<!--   </mirrors> -->
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <name>Nexus Public Mirror</name>
+      <url>http://nexus3-nexus.192.168.42.130.nip.io/repository/maven-public/</url>
+      <mirrorOf>*</mirrorOf>
+    </mirror>
+  </mirrors>
   <servers>
     <server>
       <id>nexus</id>

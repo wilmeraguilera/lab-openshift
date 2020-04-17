@@ -158,6 +158,12 @@ Para visualizar los logs del Build se puede ejecutar el siguiente comando.
 oc logs -f bc/lab-openshift
 ```
 
+El build config en este caso obtendrá las dependencias de los repositorios maven de internet, sin embargo es posib  le configurar un repositorio de artefactos para mejor la velocidad de la compilación.
+
+Para realizar este procedimiento se puente configurar la siguiente variable de entorno.
+
+MAVEN_MIRROR_URL
+
 
 
 

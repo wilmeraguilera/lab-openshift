@@ -147,7 +147,7 @@ Para el caso de nuestra aplicación de ejemplo en la cual usamos maven, openshif
 A continuación se muestra el comando para la creación de la aplicación:
 
 ```
-oc new-app openshift/openjdk18-openshift~https://github.com/wilmeraguilera/lab-openshift/ --context-dir=backend-users --strategy=source
+oc new-app openshift/openjdk18-openshift:latest~https://github.com/wilmeraguilera/lab-openshift/ --context-dir=backend-users --strategy=source
 ```
 
 En el comando anterior se hace uso de una imagen base con JDK 1.8 que ha sido previamente importada en Openshift, corresponde a la parte del comando con el siguiente texto  __openshift/openjdk18-openshift__ 
@@ -158,11 +158,17 @@ Para visualizar los logs del Build se puede ejecutar el siguiente comando.
 oc logs -f bc/lab-openshift
 ```
 
-El build config en este caso obtendrá las dependencias de los repositorios maven de internet, sin embargo es posib  le configurar un repositorio de artefactos para mejor la velocidad de la compilación.
+El build config en este caso obtendrá las dependencias de los repositorios maven de internet, sin embargo es posible configurar un repositorio de artefactos para mejor la velocidad de la compilación.
 
-Para realizar este procedimiento se puente configurar la siguiente variable de entorno.
+Para realizar este procedimiento se puede configurar la siguiente variable de entorno en el BuildConfig.
 
-MAVEN_MIRROR_URL
+MAVEN_MIRROR_URL=<<url repositorio de artefactos>>
+	
+La anterior variable de entorno del build tambien puede ser especificada en el comando new-app
+
+```
+oc new-app openshift/openjdk18-openshift:latest~https://github.com/wilmeraguilera/lab-openshift/ --context-dir=backend-users --strategy=source --build-env MAVEN_MIRROR_URL=http://nexus3-nexus.192.168.42.130.nip.io/repository/maven-public/
+```
 
 
 

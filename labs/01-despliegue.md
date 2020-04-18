@@ -106,37 +106,6 @@ Con este comando se debe realizar la construcción de la imagen y despliegue de 
 
 
 
-## Docker
-
-Openshift permite la Openshift da la posibilidad de trabajar con Imágenes docker como base para nuestras aplicaciones,  y también el desarrollador tiene la posibilidad de crear nuevas imágenes para sus aplicaciones a partir de archivos Dockerfile personalizados.
-
-Para generar las imágenes mediente un archivo Dockerfile se debe crear un Build Configuración de tipo binario y cuya estrategia sea Docker. Posteriormente se debe lanzar el Build y enviar los archivos binarios requeridos para la construcción de la imagen.
-
-
-Al momento de iniciar el build se deben enviar los archivos requeridos para la construcción de la imagen.
-
-A nivel de argumentos se tienen las siguientes posibilidades:
-
-- (--from-file)
-- (--from-directory)
-- (--from-archive)
-- (--from-repo)
-
-
-Comando para crear el Build de tipo Binario y con strategia Docker. Debe exitir en la raiz del proyecto el archivo de docker con el siguiente nombre  ```Dockerfile```
-
-```
-oc new-build --strategy docker --binary --name myapp
-```
-
-Comando para iniciar el Build enviando como parámetro el directorio de los fuentes y binarios del proyecto. Debo estar ubicado en el directorio del proyecto el cual deseo sea referenciado en el Build.
-
-```
-oc start-build myapp --from-dir=.
-```
-
-
-
 ## Source2Image S2I
 
 Openshift proporciona un mecanismo de despliegue que permite la generación de imagenes a partir del código fuente de nuestra aplicación + una imagen base.
@@ -168,6 +137,44 @@ La anterior variable de entorno del build tambien puede ser especificada en el c
 
 ```
 oc new-app openshift/openjdk18-openshift:latest~https://github.com/wilmeraguilera/lab-openshift/ --context-dir=backend-users --strategy=source --build-env MAVEN_MIRROR_URL=http://nexus3-nexus.192.168.42.130.nip.io/repository/maven-public/
+```
+
+
+
+## Docker
+
+Openshift permite la Openshift da la posibilidad de trabajar con Imágenes docker como base para nuestras aplicaciones,  y también el desarrollador tiene la posibilidad de crear nuevas imágenes para sus aplicaciones a partir de archivos Dockerfile personalizados.
+
+Para generar las imágenes mediente un archivo Dockerfile se debe crear un Build Configuración de tipo binario y cuya estrategia sea Docker. Posteriormente se debe lanzar el Build y enviar los archivos binarios requeridos para la construcción de la imagen.
+
+
+Al momento de iniciar el build se deben enviar los archivos requeridos para la construcción de la imagen.
+
+A nivel de argumentos se tienen las siguientes posibilidades:
+
+- (--from-file)
+- (--from-directory)
+- (--from-archive)
+- (--from-repo)
+
+
+Comando para crear el Build de tipo Binario y con strategia Docker. Debe exitir en la raiz del proyecto el archivo de docker con el siguiente nombre  ```Dockerfile```
+
+```
+oc new-build --strategy docker --binary --name myapp
+```
+
+Comando para iniciar el Build enviando como parámetro el directorio de los fuentes y binarios del proyecto. Debo estar ubicado en el directorio del proyecto el cual deseo sea referenciado en el Build.
+
+```
+oc start-build myapp --from-dir=.
+```
+
+Con el comando anterior lograremos tener una imagen con nuestra aplicación almacenad en el registro interno de oopenshift y se generará el ImageStream referenciandola.
+Con el siguiente comando podremos crear la aplicación a partir de dicha imagen.
+
+```
+oc new-app dev-api-users-docker/lab-openshift --name myapp
 ```
 
 

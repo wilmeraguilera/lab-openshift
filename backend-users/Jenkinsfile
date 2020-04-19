@@ -112,6 +112,46 @@ node() {
     }
   }
 
+
+  stage('Deploy to DEV'){
+	    echo "Inicia Deploy"
+      sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace}/${params.appName}:${devTag} --source=imagestreamtag -n ${params.namespace}"
+      sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
+      
+      def dc_version = sh(script:"oc get dc/${params.appName} -o=yaml -n ${params.namespace} | grep 'latestVersion'| cut -d':' -f 2" , returnStdout:true).trim();
+      echo "Version de DeploymentConfig Actual ${dc_version}"
+      
+      def rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+      def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+
+	    echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+	  
+	  
+	  
+	    def countIterMax=20
+	    def countInterActual=0
+
+      while ((rc_replicas != rc_replicas_ready)&&countInterActual <=countIterMax) {
+			  sleep 5
+
+        rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+				rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+
+        echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+
+        countInterActual = countInterActual + 1
+				echo "Iteracion Actual: "+countInterActual
+				if (countInterActual>countIterMax){
+				  echo "Se ha superado el tiempo de espera para el despliegue"
+					echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
+					sh "oc rollout cancel dc/${params.appName}s -n ${params.namespace}"
+					throw new Exception("Se ha superado el tiempo de espera para el despliegue")
+				}
+        echo "Termina Deploy"  
+      }  
+    }
+  }
+
 }
 
 

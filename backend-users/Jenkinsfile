@@ -10,7 +10,17 @@ def destApp = ""
 def activeApp = ""
 
 node() {
-  echo "Namespace: wilmer"
+  properties([
+      parameters(
+          [
+            string(name: 'namespace', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift'),
+            string(name: 'appName', defaultValue: 'api-users', description:'Application name')
+          ]
+        )
+  ])
+
+  echo "Namespace: ${params.namespace}"
+  echo "Application name: ${params.appName}"
 }
 
 // Convenience Functions to read variables from the pom.xml

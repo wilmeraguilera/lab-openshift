@@ -1,6 +1,13 @@
 // Jenkinsfile for Api-users - 
 // Set the tag for the development image: version + build number
+def devTag      = "0.0-0"
 
+// Set the tag for the production image: version
+def prodTag     = "0.0"
+def version
+def artifact	= ""
+def destApp = "" 
+def activeApp = ""
 
 node() {
   echo "Namespace: wilmer"

@@ -21,6 +21,40 @@ node() {
 
   echo "Namespace: ${params.namespace}"
   echo "Application name: ${params.appName}"
+
+
+  stage('Preparing'){
+		mvnHome = tool 'M2'
+
+		// Define Maven Command. Make sure it points to the correct
+		// settings for our Nexus installation (use the service to
+		// bypass the router). The file settings.xml
+		// needs to be in the Source Code repository.
+
+		mvnCmd = "${mvnHome}/bin/mvn "
+
+
+		env.JAVA_HOME=tool 'JDK18'
+		env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+		sh 'java -version'
+
+	}
+    
+    
+  // Checkout Source Code
+  stage('Checkout Source') {
+	  checkout scm  
+    dir("backend-users"){
+      def pom = 'pom.xml'
+      version = getVersionFromPom(pom)
+      echo version;
+
+      devTag  = "${version}-" + currentBuild.number
+      artifact = getArtifactIdFromPom(pom)	    	
+    }
+	  echo "Devtag: ${devTag}"      	
+  }
+  //end of the checkout stage
 }
 
 // Convenience Functions to read variables from the pom.xml

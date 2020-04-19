@@ -1,12 +1,9 @@
 // Jenkinsfile for Api-users - 
 // Set the tag for the development image: version + build number
 
-{
-  node() {
 
-    echo "Namespace: wilmer"
-    
-  }
+node() {
+  echo "Namespace: wilmer"
 }
 
 // Convenience Functions to read variables from the pom.xml

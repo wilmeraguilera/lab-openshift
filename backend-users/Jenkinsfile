@@ -72,7 +72,38 @@ node() {
   		sh "${mvnCmd}  test -s ./configuration/settings-maven.xml"
 	  }  
   }
+
+  stage('SonarQube Scan') {
+    dir("backend-users"){  
+      echo "Init Running Code Analysis"
+      withSonarQubeEnv('sonar') {
+        sh "${mvnCmd} sonar:sonar " +
+              "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings.xml"
+        
+      }
+      sleep(10)
+          
+      timeout(time: 1, unit: 'MINUTES') {
+        def qg = waitForQualityGate()
+        if (qg.status != 'OK') {
+          error "Pipeline aborted due to quality gate failure: ${qg.status}"
+        }
+      }
+      echo "End Running Code Analysis"
+    }
+  }
+
+  //Public in repository
+	stage('Publish to Nexus') {
+    dir("backend-users"){   
+      echo "Publish to Nexus"
+      sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings.xml"
+    }
+	}
 }
+
+
+
 // Convenience Functions to read variables from the pom.xml
 def getVersionFromPom(pom) {
   def matcher = readFile(pom) =~ '<version>(.+)</version>'

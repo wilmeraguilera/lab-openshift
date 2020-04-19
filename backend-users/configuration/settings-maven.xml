@@ -14,17 +14,17 @@
     <server>
       <id>nexus</id>
       <username>admin</username>
-      <password>admin123</password>
+      <password>admin</password>
     </server>
     <server>
       <id>nexus-srv-releases</id>
       <username>admin</username>
-      <password>admin123</password>
+      <password>admin</password>
     </server>
     <server>
       <id>nexus-srv-snapshots</id>
       <username>admin</username>
-      <password>admin123</password>
+      <password>admin</password>
     </server>
   </servers>
 </settings>

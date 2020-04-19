@@ -4,18 +4,8 @@
 {
   node() {
 
-
-    properties([
-      parameters(
-          [
-            string(name: 'namespace', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift'),
-            string(name: 'appName', defaultValue: 'api-users', description:'Application name')
-          ]
-        )
-    ])
-
-    echo "Namespace: ${params.namespace}"
-    echo "Application name: ${params.appName}"
+    echo "Namespace: wilmer"
+    
   }
 }
 

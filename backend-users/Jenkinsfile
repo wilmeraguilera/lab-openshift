@@ -102,6 +102,17 @@ node() {
 	}
 }
 
+stage('Create Image'){
+  dir("backend-users"){
+    echo "Inicia creación image"
+    echo devTag
+    echo prodTag
+    sh "oc start-build ${params.appName} --from-file=./target/backend-users-${version}.jar --wait=true -n ${params.namespace}"
+    sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace}"
+    echo "Termina creación image"
+  }
+}
+
 
 
 // Convenience Functions to read variables from the pom.xml

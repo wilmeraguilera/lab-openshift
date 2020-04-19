@@ -55,8 +55,24 @@ node() {
 	  echo "Devtag: ${devTag}"      	
   }
   //end of the checkout stage
-}
 
+
+  stage('Build App') {
+    dir("backend-users"){
+      echo "Building version ${devTag}"
+      sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings.xml"
+      echo "Building complete version ${devTag}"
+    }     
+  }
+    
+  //End of the build step
+  stage('Unit Tests') {
+    dir("backend-users"){      
+			echo "Running Unit Tests"
+  		sh "${mvnCmd}  test -s ./configuration/settings.xml"
+	  }  
+  }
+}
 // Convenience Functions to read variables from the pom.xml
 def getVersionFromPom(pom) {
   def matcher = readFile(pom) =~ '<version>(.+)</version>'

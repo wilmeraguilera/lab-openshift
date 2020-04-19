@@ -12,22 +12,6 @@ def destApp = ""
 def activeApp = ""
 
 
-podTemplate(
-  label: "maven-pod",
-  cloud: "openshift",
-  inheritFrom: "maven",
-  containers: [
-    containerTemplate(
-      name: "jnlp",
-      image: "docker-registry.default.svc:5000/jenkins/jenkins-agent-maven-35-rhel7",
-      resourceRequestMemory: "1Gi",
-      resourceLimitMemory: "2Gi",
-      resourceRequestCpu: "1",
-      resourceLimitCpu: "1"
-    )
-  ]
-) 
-
 {
   node() {
 
@@ -47,7 +31,7 @@ podTemplate(
 
 
     stage('Preparing'){
-			mvnHome = tool 'm2'
+			mvnHome = tool 'M2'
 
 			// Define Maven Command. Make sure it points to the correct
 			// settings for our Nexus installation (use the service to

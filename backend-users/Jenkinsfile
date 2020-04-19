@@ -69,7 +69,7 @@ node() {
   stage('Unit Tests') {
     dir("backend-users"){      
 			echo "Running Unit Tests"
-  		sh "${mvnCmd}  test -s ./configuration/settings.xml"
+  		sh "${mvnCmd}  test -s ./configuration/settings_maven.xml"
 	  }  
   }
 }

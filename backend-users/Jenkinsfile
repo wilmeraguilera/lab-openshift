@@ -60,7 +60,7 @@ node() {
   stage('Build App') {
     dir("backend-users"){
       echo "Building version ${devTag}"
-      sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings.xml"
+      sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings_maven.xml"
       echo "Building complete version ${devTag}"
     }     
   }

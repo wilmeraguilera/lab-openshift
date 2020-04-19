@@ -78,7 +78,7 @@ node() {
       echo "Init Running Code Analysis"
       withSonarQubeEnv('sonar') {
         sh "${mvnCmd} sonar:sonar " +
-              "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings.xml"
+              "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings-maven.xml"
         
       }
       sleep(10)
@@ -97,7 +97,7 @@ node() {
 	stage('Publish to Nexus') {
     dir("backend-users"){   
       echo "Publish to Nexus"
-      sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings.xml"
+      sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings-maven.xml"
     }
 	}
 }

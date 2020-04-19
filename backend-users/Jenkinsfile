@@ -60,7 +60,7 @@ node() {
   stage('Build App') {
     dir("backend-users"){
       echo "Building version ${devTag}"
-      sh "${mvnCmd} clean install -DskipTests -s configuration/settings_maven.xml"
+      sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings-maven.xml"
       echo "Building complete version ${devTag}"
     }     
   }
@@ -69,7 +69,7 @@ node() {
   stage('Unit Tests') {
     dir("backend-users"){      
 			echo "Running Unit Tests"
-  		sh "${mvnCmd}  test -s configuration/settings_maven.xml"
+  		sh "${mvnCmd}  test -s ./configuration/settings-maven.xml"
 	  }  
   }
 }

@@ -6,7 +6,7 @@
     <mirror>
       <id>nexus</id>
       <name>Nexus Public Mirror</name>
-      <url>http://nexus:8081/repository/maven-public/</url>
+      <url>http://localhost:8081/repository/maven-public/</url>
       <mirrorOf>*</mirrorOf>
     </mirror>
   </mirrors>

@@ -193,7 +193,7 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-
+	<!--
 	<distributionManagement>
 		<repository>
 			<id>nexus-srv-releases</id>
@@ -204,6 +204,19 @@
 			<id>nexus-srv-snapshots</id>
 			<name>Internal Snapshots</name>
 			<url>http://nexus3-nexus.192.168.42.130.nip.io/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>-->
+	
+	<distributionManagement>
+		<repository>
+			<id>nexus-srv-releases</id>
+			<name>Internal Releases</name>
+			<url>http://localhost:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-srv-snapshots</id>
+			<name>Internal Snapshots</name>
+			<url>http://localhost:8081/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 

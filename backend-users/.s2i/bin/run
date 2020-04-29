@@ -1,7 +1,8 @@
 #!/bin/bash
 echo "Before running application"
 echo "down security init"
-sudo update-crypto-policies --set LEGACY
+chmod -R 777 /etc/crypto-policies/
+update-crypto-policies --set LEGACY
 echo "down security ok"
 echo "Launch standard run"
 exec /usr/local/s2i/run

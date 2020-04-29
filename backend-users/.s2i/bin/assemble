@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "Before assemble"
 sudo update-crypto-policies --set LEGACY
+RUN chown -R 1001:1001 /etc/crypto-policies/
 exec /usr/local/s2i/assemble
 echo "Post Assemble"

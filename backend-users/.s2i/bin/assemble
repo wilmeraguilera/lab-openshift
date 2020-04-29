@@ -1,4 +1,6 @@
 #!/bin/bash
 echo "Before assemble"
+update-crypto-policies --set LEGACY
 exec /usr/local/s2i/assemble
+update-crypto-policies --set LEGACY
 echo "Post Assemble"

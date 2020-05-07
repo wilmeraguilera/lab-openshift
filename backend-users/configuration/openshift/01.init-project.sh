@@ -17,7 +17,7 @@ oc set resources dc api-users --limits=memory=800Mi,cpu=800m --requests=memory=6
 oc set triggers dc/api-users --remove-all -n dev-admin-users
 
 #Creación del configmap
-oc create configmap myconfigmap --from-file=application.properties
+oc create configmap myconfigmap
 
 #Asociación del config map al DeploymentConfig
 oc set volume dc/lab-openshift --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=myconfigmap

@@ -16,6 +16,12 @@ oc set resources dc api-users --limits=memory=800Mi,cpu=800m --requests=memory=6
 #Desactivar triggers en la app para evitar el build y el deploy  automatico (Se quiere que el proceso lo controle jenkins)
 oc set triggers dc/api-users --remove-all -n dev-admin-users
 
+#Creación del configmap
+oc create configmap myconfigmap --from-file=application.properties
+
+#Asociación del config map al DeploymentConfig
+oc set volume dc/lab-openshift --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=myconfigmap
+
 #Crear el service a partir del deploymentConfig, en este caso el puerto 8080
 oc expose dc api-users --port 8080 -n dev-admin-users
 

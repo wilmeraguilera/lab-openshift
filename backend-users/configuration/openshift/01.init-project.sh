@@ -20,7 +20,7 @@ oc set triggers dc/api-users --remove-all -n dev-admin-users
 oc create configmap myconfigmap
 
 #Asociación del config map al DeploymentConfig
-oc set volume dc/lab-openshift --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=myconfigmap
+oc set volume dc/api-users --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=myconfigmap
 
 #Crear el service a partir del deploymentConfig, en este caso el puerto 8080
 oc expose dc api-users --port 8080 -n dev-admin-users

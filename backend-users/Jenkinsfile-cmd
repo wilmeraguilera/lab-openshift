@@ -52,9 +52,9 @@ node() {
     }
 	        	
   }
-  //end of the checkout stage
+  
 
-
+  // Stage Build App
   stage('Build App') {
     dir("backend-users"){
       echo "Building version ${devTag}"
@@ -63,7 +63,7 @@ node() {
     }     
   }
     
-  //End of the build step
+  //Stage Ejecución de Pruebas unitarias
   stage('Unit Tests') {
     dir("backend-users"){      
 			echo "Running Unit Tests"
@@ -71,6 +71,7 @@ node() {
 	  }  
   }
 
+  //Stage de análisis estático de código con Sonar
   stage('SonarQube Scan') {
     dir("backend-users"){  
       echo "Init Running Code Analysis"
@@ -91,7 +92,7 @@ node() {
     }
   }
 
-  //Public in repository
+  //Public en un repository (Nexus)
 	stage('Publish to Nexus') {
     dir("backend-users"){   
       echo "Publish to Nexus"
@@ -99,6 +100,8 @@ node() {
     }
 	}
 
+
+  //Stage Build Image
   stage('Create Image'){
     openshift.withCluster( 'oc-dev',  ) {
        openshift.withCredentials( 'oc-dev' ) {

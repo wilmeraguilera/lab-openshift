@@ -103,21 +103,17 @@ node() {
 
   //Stage Build Image
   stage('Create Image'){
-    openshift.withCluster( 'oc-dev',  ) {
-       openshift.withCredentials( 'oc-dev' ) {
-        dir("backend-users"){
-          echo "Inicia creación image"
-          echo devTag
-          echo prodTag
-          sh "oc start-build ${params.appName} --from-file=./target/${artifactName}-${artifactVersion}.jar --wait=true -n ${params.namespace}"
-          sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace}"
-          echo "Termina creación image"
-        }
-       }
+    dir("backend-users"){
+      echo "Inicia creación image"
+      echo devTag
+      echo prodTag
+      sh "oc start-build ${params.appName} --from-file=./target/${artifactName}-${artifactVersion}.jar --wait=true -n ${params.namespace}"
+      sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace}"
+      echo "Termina creación image"
     }
   }
 
-
+  //Stage deploy Dev
   stage('Deploy to DEV'){
 
       input 'Deploy?'
@@ -132,8 +128,6 @@ node() {
       def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
 
 	    echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
-	  
-	  
 	  
 	    def countIterMax=20
 	    def countInterActual=0

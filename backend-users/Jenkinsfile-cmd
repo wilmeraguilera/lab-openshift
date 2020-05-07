@@ -44,9 +44,10 @@ node() {
       def pom = readMavenPom file: 'pom.xml'
       artifactVersion = pom.version
       artifactName = pom.artifactId
-      echo "La version del artefacto es: "+version; 
+      echo "La version del artefacto es: "+artifactVersion; 
+      echo "El nombre de artefacto es: "+artifactName; 
 
-      devTag  = "${version}-" + currentBuild.number
+      devTag  = "${artifactVersion}-" + currentBuild.number
     }
 	  echo "Devtag: ${devTag}"      	
   }

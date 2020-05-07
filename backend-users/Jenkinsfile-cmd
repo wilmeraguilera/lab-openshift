@@ -48,8 +48,9 @@ node() {
       echo "El nombre de artefacto es: "+artifactName; 
 
       devTag  = "${artifactVersion}-" + currentBuild.number
+      echo "Versión de la imagen Devtag: ${devTag}"
     }
-	  echo "Devtag: ${devTag}"      	
+	        	
   }
   //end of the checkout stage
 

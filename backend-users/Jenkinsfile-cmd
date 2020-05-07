@@ -36,11 +36,11 @@ node() {
 	}
     
     
-  // Stage descarga código fuente 
+  // Stage descarga código fuente y leer variables del pom
   stage('Checkout Source') {
 	  checkout scm  
     dir("backend-users"){
-      //Obtener version del artefacto 
+      //Obtener version y el nombre del artefacto 
       def pom = readMavenPom file: 'pom.xml'
       artifactVersion = pom.version
       artifactName = pom.artifactId

@@ -52,4 +52,14 @@ node() {
 	        	
   }
 
+  
+  // Stage Build App
+  stage('Build App') {
+    dir("backend-users"){
+      echo "Building version ${devTag}"
+      sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings-maven.xml"
+      echo "Building complete version ${devTag}"
+    }     
+  }
+
 }

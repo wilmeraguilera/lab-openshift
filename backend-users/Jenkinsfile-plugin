@@ -137,8 +137,9 @@ node() {
             openshift.selector('configmap', 'myconfigmap').delete(' --ignore-not-found=true ')
 						openshift.create('configmap', 'myconfigmap', '--from-file=./src/main/resources/application.properties')
 
+            //sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace}/${params.appName}:${devTag} --source=imagestreamtag -n ${params.namespace}"
+            openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace}/${params.appName}:${devTag}")
 
-            sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace}/${params.appName}:${devTag} --source=imagestreamtag -n ${params.namespace}"
             sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
             
             def dc_version = sh(script:"oc get dc/${params.appName} -o=yaml -n ${params.namespace} | grep 'latestVersion'| cut -d':' -f 2" , returnStdout:true).trim();

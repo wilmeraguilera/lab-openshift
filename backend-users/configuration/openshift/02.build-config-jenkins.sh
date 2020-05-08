@@ -18,7 +18,7 @@ items:
     strategy:
       type: "JenkinsPipeline"
       jenkinsPipelineStrategy:
-        jenkinsfilePath: Jenkinsfile-plugin
+        jenkinsfilePath: Jenkinsfile-cli
 kind: List
 metadata: []" | oc create -f - -n jenkins
 

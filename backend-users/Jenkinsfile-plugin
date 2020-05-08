@@ -139,7 +139,7 @@ node() {
 						openshift.create('configmap', 'myconfigmap', '--from-file=./src/main/resources/application.properties')
 
             //sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace}/${params.appName}:${devTag} --source=imagestreamtag -n ${params.namespace}"
-            openshift.set("image", "dc/${params.appName}", "${params.appName}=${OPENSHIFT_REGISTRY}/${params.namespace}/${params.appName}:${devTag}")
+            openshift.set("image", "dc/${params.appName}", "${params.appName}=${openshiftRegistry}/${params.namespace}/${params.appName}:${devTag}")
 
             //sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
             openshift.selector("dc", "${params.appName}").rollout().latest();
@@ -151,27 +151,18 @@ node() {
             def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
 
             echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
-          
-            def countIterMax=20
-            def countInterActual=0
 
-            while ((rc_replicas != rc_replicas_ready)&&countInterActual <=countIterMax) {
+            sleep 2
+
+            // Wait for application to be deployed
+            def dc = openshift.selector("dc", "${params.appName}").object()
+            def dc_version = dc.status.latestVersion
+            def rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+
+            echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
+            while (rc.spec.replicas != rc.status.readyReplicas) {
               sleep 5
-
-              rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-              rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
-
-              echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
-
-              countInterActual = countInterActual + 1
-              echo "Iteracion Actual: "+countInterActual
-              if (countInterActual>countIterMax){
-                echo "Se ha superado el tiempo de espera para el despliegue"
-                echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
-                sh "oc rollout cancel dc/${params.appName}s -n ${params.namespace}"
-                throw new Exception("Se ha superado el tiempo de espera para el despliegue")
-              }
-              echo "Termina Deploy"  
+              rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
             }
           }
         }

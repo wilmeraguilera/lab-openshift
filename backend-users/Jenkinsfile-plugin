@@ -140,7 +140,8 @@ node() {
             //sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace}/${params.appName}:${devTag} --source=imagestreamtag -n ${params.namespace}"
             openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace}/${params.appName}:${devTag}")
 
-            sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
+            //sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
+            openshift.selector("dc", "${params.appName}").rollout().latest();
             
             def dc_version = sh(script:"oc get dc/${params.appName} -o=yaml -n ${params.namespace} | grep 'latestVersion'| cut -d':' -f 2" , returnStdout:true).trim();
             echo "Version de DeploymentConfig Actual ${dc_version}"

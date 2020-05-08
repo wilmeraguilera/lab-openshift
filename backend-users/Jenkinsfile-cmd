@@ -116,7 +116,7 @@ node() {
   //Stage deploy Dev
   stage('Deploy to DEV'){
 
-      input 'Deploy?'
+      //input 'Deploy?'
 	    echo "Inicia Deploy"
 
       sh "oc delete cm myconfigmap --ignore-not-found=true"

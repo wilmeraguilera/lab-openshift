@@ -139,7 +139,7 @@ node() {
 						openshift.create('configmap', 'myconfigmap', '--from-file=./src/main/resources/application.properties')
 
             //sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace}/${params.appName}:${devTag} --source=imagestreamtag -n ${params.namespace}"
-            openshift.set("image", "dc/${params.appName}", "${params.appName}=${openshiftRegistry}/${params.namespace}/${params.appName}:${devTag}")
+            openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace}/${params.appName}:${devTag}", " --source=imagestreamtag ")
 
             //sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
             openshift.selector("dc", "${params.appName}").rollout().latest();

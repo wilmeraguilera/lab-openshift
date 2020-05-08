@@ -111,7 +111,7 @@ node() {
         //sh "oc start-build ${params.appName} --from-file=./target/${artifactName}-${artifactVersion}.jar --wait=true -n ${params.namespace}"
         //sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace}"
 
-        openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${artifactName}", "--wait=true")
+        openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${artifactName}-${artifactVersion}.jar", "--wait=true")
         openshift.tag("${params.appName}:latest", "${params.appName}:${devTag}")
 
 

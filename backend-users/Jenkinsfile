@@ -62,4 +62,33 @@ node() {
     }     
   }
 
+  //Stage Ejecución de Pruebas unitarias
+  stage('Unit Tests') {
+    dir("backend-users"){      
+			echo "Running Unit Tests"
+  		sh "${mvnCmd}  test -s ./configuration/settings-maven.xml"
+	  }  
+  }
+
+  //Stage de análisis estático de código con Sonar
+  stage('SonarQube Scan') {
+    dir("backend-users"){  
+      echo "Init Running Code Analysis"
+      withSonarQubeEnv('sonar') {
+        sh "${mvnCmd} sonar:sonar " +
+              "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings-maven.xml"
+        
+      }
+      sleep(10)
+          
+      timeout(time: 1, unit: 'MINUTES') {
+        def qg = waitForQualityGate()
+        if (qg.status != 'OK') {
+          error "Pipeline aborted due to quality gate failure: ${qg.status}"
+        }
+      }
+      echo "End Running Code Analysis"
+    }
+  }
+
 }

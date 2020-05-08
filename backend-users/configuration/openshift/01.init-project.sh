@@ -11,7 +11,7 @@ oc new-build --binary=true --name="api-users" openshift/openjdk18-openshift  -n 
 oc new-app dev-admin-users/api-users:0.0-0 --name=api-users --allow-missing-imagestream-tags=true -n dev-admin-users
 
 #De manera opcional se pueden configurar los Limites de recursos para la aplicación
-oc set resources dc api-users --limits=memory=800Mi,cpu=800m --requests=memory=600Mi,cpu=500m
+oc set resources dc api-users --limits=memory=800Mi,cpu=1000m --requests=memory=600Mi,cpu=500m
 
 #Desactivar triggers en la app para evitar el build y el deploy  automatico (Se quiere que el proceso lo controle jenkins)
 oc set triggers dc/api-users --remove-all -n dev-admin-users

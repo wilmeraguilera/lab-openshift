@@ -143,14 +143,6 @@ node() {
 
             //sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
             openshift.selector("dc", "${params.appName}").rollout().latest();
-            
-            def dc_version = sh(script:"oc get dc/${params.appName} -o=yaml -n ${params.namespace} | grep 'latestVersion'| cut -d':' -f 2" , returnStdout:true).trim();
-            echo "Version de DeploymentConfig Actual ${dc_version}"
-            
-            def rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-            def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
-
-            echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
 
             sleep 2
 

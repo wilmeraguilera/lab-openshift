@@ -31,7 +31,7 @@ public class UserResource {
 	
 	@GetMapping("/healthcheck")
 	public String healthcheck() {
-		return appTitle + " - Status UP!";
+		return appTitle + " - Status UP Modified!";
 	}
 
 	@GetMapping("/users")

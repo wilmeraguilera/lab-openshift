@@ -35,4 +35,21 @@ node() {
 		sh 'java -version'
 	}
 
+   // Stage descarga código fuente y leer variables del pom
+  stage('Checkout Source') {
+	  checkout scm  
+    dir("backend-users"){
+      //Obtener version y el nombre del artefacto 
+      def pom = readMavenPom file: 'pom.xml'
+      artifactVersion = pom.version
+      artifactName = pom.artifactId
+      echo "La version del artefacto es: "+artifactVersion; 
+      echo "El nombre de artefacto es: "+artifactName; 
+
+      devTag  = "${artifactVersion}-" + currentBuild.number
+      echo "Versión de la imagen Devtag: ${devTag}"
+    }
+	        	
+  }
+
 }

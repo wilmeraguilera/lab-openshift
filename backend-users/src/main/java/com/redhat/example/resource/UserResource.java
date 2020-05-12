@@ -42,6 +42,14 @@ public class UserResource {
 
 	@GetMapping("/usersAll")
 	public List<User> retrieveAll() {
+		
+		System.out.println("COnsultar usuario");
+		List<User> users = userRepository.findAll();
+		
+		for(User user: users) {
+			System.out.println(user);
+		}
+		
 		return userRepository.findAll();
 	}
 

@@ -1,10 +1,6 @@
 pipeline{
   agent any
 
-  enviroment{
-
-  }
-
   tools{
     maven 'M2-3.6.3'
     jdk 'JDK18'

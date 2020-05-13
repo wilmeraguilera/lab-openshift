@@ -4,7 +4,7 @@ pipeline{
 
   tools{
     maven 'M2-3.6.3'
-    java 'JDK18'
+    jdk 'JDK18'
   }
 
   stages{

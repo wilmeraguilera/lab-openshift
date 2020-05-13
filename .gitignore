@@ -3,3 +3,5 @@
 target/
 .mvn/
 .settings
+/.idea/lab-openshift.iml
+/.idea/workspace.xml

@@ -67,10 +67,8 @@ pipeline {
                             textTemplate = textTemplate.replace('#{' + property.key + '}', property.value)
                         }
 
-                        writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
+                        writeFile(file: "application-dev.properties", text: textTemplate, encoding: "UTF-8")
 
-
-                  //replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
                     }
                 }
                 echo "Deploy DEV"

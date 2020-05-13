@@ -56,10 +56,10 @@ pipeline {
                 dir('backend-users/src/main/resources'){
                     script {
 
-                        Properties props = new Properties()
-                        File propsFile = new File('application.properties')
-                        props.load(propsFile.newDataInputStream())
-                        Set values = props.entrySet()
+                        def cc = readProperties  file: 'application.properties'
+                        for(Entry<Object, Object> en : props.entrySet()) {
+                            echo en
+                        }
 
                         def text = readFile "application-env.properties"
 

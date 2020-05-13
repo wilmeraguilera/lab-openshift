@@ -72,7 +72,7 @@ def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile){
     def props = readProperties  file: valuesPropertiesFile
 
     def textTemplate = readFile templateFile
-    echo "Contenido leido: "+textTemplate
+    echo "Contenido leido del template: "+textTemplate
 
     props.each { property ->
         echo property.key
@@ -80,12 +80,9 @@ def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile){
         textTemplate = textTemplate.replace('${' + property.key + '}', property.value)
     }
 
-
-
     echo "Contenido Reemplazado: "+textTemplate
 
-    text = textTemplate
-
-    writeFile(file: destinationFile, text: text, encoding: "UTF-8")
+    finalText = textTemplate
+    writeFile(file: destinationFile, text: finalText, encoding: "UTF-8")
 }
 

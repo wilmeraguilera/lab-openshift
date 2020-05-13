@@ -59,7 +59,7 @@ pipeline {
                         def props = readProperties  file: 'application.properties'
 
                         def textTemplate = readFile "application-env.properties"
-                        echo "Contenido leido: "+text
+                        echo "Contenido leido: "+textTemplate
 
                         props.each { property ->
                             echo property.key
@@ -67,8 +67,16 @@ pipeline {
                             textTemplate = textTemplate.replace('#{' + property.key + '}', property.value)
                         }
 
-                        writeFile(file: "application-dev.properties", text: textTemplate, encoding: "UTF-8")
 
+
+                        echo "Contenido Reemplazado: "+textTemplate
+
+                        text = textTemplate
+
+                        writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
+
+                        sh (script : 'cat application-dev.properties', returnStdout: true)
+                  //replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
                     }
                 }
                 echo "Deploy DEV"

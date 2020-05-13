@@ -86,6 +86,6 @@ def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile){
 
     text = textTemplate
 
-    writeFile(file: destinationFilessss, text: text, encoding: "UTF-8")
+    writeFile(file: destinationFile, text: text, encoding: "UTF-8")
 }
 

@@ -57,8 +57,10 @@ pipeline {
                     script {
 
                         def props = readProperties  file: 'application.properties'
-                        for(Set en : props.entrySet()) {
-                            echo en
+                        values.each { property ->
+                            echo property.key
+                            echo property.value
+                            //content = content.replace('#{' + property.key + '}', property.value)
                         }
 
                         def text = readFile "application-env.properties"

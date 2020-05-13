@@ -57,7 +57,7 @@ pipeline {
                     script {
 
                         def props = readProperties  file: 'application.properties'
-                        values.each { property ->
+                        props.each { property ->
                             echo property.key
                             echo property.value
                             //content = content.replace('#{' + property.key + '}', property.value)

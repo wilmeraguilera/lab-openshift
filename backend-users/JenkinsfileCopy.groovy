@@ -79,9 +79,8 @@ def replaceValuesInFile (String templatePathFile, String finalPathFile, String p
 
   def content = destFile.text
 
-  values.each { property ->  {
+  values.each { property ->
     content= content.replace('#{'+property.key+'}', property.value)
-  }
   }
 
   //Escribir archivo destino

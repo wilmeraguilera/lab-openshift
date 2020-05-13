@@ -56,7 +56,7 @@ pipeline {
                 dir('backend-users/src/main/resources'){
                     script {
 
-                        def cc = readProperties  file: 'application.properties'
+                        def props = readProperties  file: 'application.properties'
                         for(def en : props.entrySet()) {
                             echo en
                         }

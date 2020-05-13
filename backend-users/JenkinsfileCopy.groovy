@@ -54,16 +54,18 @@ pipeline {
             steps {
 
                 dir('backend-users/src/main/resources'){
-                    def text = readFile "application-env.properties"
+                    script {
+                        def text = readFile "application-env.properties"
 
-                    echo "Contenido leido: "+text
+                        echo "Contenido leido: "+text
 
-                    text.replaceAll('#{server.port}', '9990')
+                        text.replaceAll('#{server.port}', '9990')
 
-                    writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
+                        writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
 
-                    sh (script : 'vim application-dev.properties', returnStdout: true)
+                        sh (script : 'vim application-dev.properties', returnStdout: true)
                   //replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
+                    }
                 }
                 echo "Deploy DEV"
             }

@@ -2,11 +2,16 @@ pipeline{
 
   agent any
 
-  stages{
+  tools{
+    maven 'M2-3.6.3'
+    java 'JDK18'
+  }
 
+  stages{
     stage("Checkout Source Code"){
       steps{
         echo "Checkout Source Code"
+        sh "java -version"
       }
     }
 

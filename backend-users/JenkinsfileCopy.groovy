@@ -55,6 +55,10 @@ pipeline {
 
                 dir('backend-users/src/main/resources'){
                     script {
+
+                        //Crear archivo de propiedades dev
+                        replaceValuesInFile('application.properties', 'application-env.properties','application-dev.properties')
+                        /*
                         //leer propiedades
                         def props = readProperties  file: 'application.properties'
 
@@ -75,8 +79,8 @@ pipeline {
 
                         writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
 
-                        sh (script : 'cat application-dev.properties', returnStdout: true)
-                  //replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
+                        sh (script : 'cat application-dev.properties', returnStdout: true)*/
+
                     }
                 }
                 echo "Deploy DEV"
@@ -84,3 +88,25 @@ pipeline {
         }
     }
 }
+
+def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile){
+    def props = readProperties  file: valuesPropertiesFile
+
+    def textTemplate = readFile templateFile
+    echo "Contenido leido: "+textTemplate
+
+    props.each { property ->
+        echo property.key
+        echo property.value
+        textTemplate = textTemplate.replace('${' + property.key + '}', property.value)
+    }
+
+
+
+    echo "Contenido Reemplazado: "+textTemplate
+
+    text = textTemplate
+
+    writeFile(file: destinationFilessss, text: text, encoding: "UTF-8")
+}
+

@@ -18,7 +18,9 @@ pipeline{
     stage("Build"){
       steps{
         echo "Build"
-        sh "mvn -Dmaven.test.skip=true compile"
+        dir("backend-users"){
+          sh "mvn -Dmaven.test.skip=true compile"
+        }
       }
     }
 

@@ -59,7 +59,7 @@ pipeline {
 
                         echo "Contenido leido: "+text
 
-                        text.replaceAll('${server.port}', '9990')
+                        text.replaceAll("${server.port}", '9990')
 
                         writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
 

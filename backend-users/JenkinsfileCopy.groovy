@@ -11,7 +11,7 @@ pipeline{
     stage("Checkout Source Code"){
       steps{
         echo "Checkout Source Code"
-        sh "java -version"
+        checkout scm
       }
     }
 

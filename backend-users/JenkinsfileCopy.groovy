@@ -64,7 +64,7 @@ pipeline {
                         props.each { property ->
                             echo property.key
                             echo property.value
-                            textTemplate = textTemplate.replace('#{' + property.key + '}', property.value)
+                            textTemplate = textTemplate.replace('${' + property.key + '}', property.value)
                         }
 
 

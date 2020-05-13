@@ -54,7 +54,13 @@ pipeline {
             steps {
 
                 dir('backend-users/src/main/resources'){
-                  replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
+                    def text = readFile "application-env.properties"
+                    text.replaceAll('#{server.port}', '9990')
+
+                    writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
+
+                    sh (script : 'vim application-dev.properties', returnStdout: true)
+                  //replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
                 }
                 echo "Deploy DEV"
             }

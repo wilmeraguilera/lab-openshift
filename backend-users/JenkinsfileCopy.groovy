@@ -58,28 +58,7 @@ pipeline {
 
                         //Crear archivo de propiedades dev
                         replaceValuesInFile('application.properties', 'application-env.properties','application-dev.properties')
-                        /*
-                        //leer propiedades
-                        def props = readProperties  file: 'application.properties'
 
-                        def textTemplate = readFile "application-env.properties"
-                        echo "Contenido leido: "+textTemplate
-
-                        props.each { property ->
-                            echo property.key
-                            echo property.value
-                            textTemplate = textTemplate.replace('${' + property.key + '}', property.value)
-                        }
-
-
-
-                        echo "Contenido Reemplazado: "+textTemplate
-
-                        text = textTemplate
-
-                        writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
-
-                        sh (script : 'cat application-dev.properties', returnStdout: true)*/
 
                     }
                 }

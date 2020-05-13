@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +22,12 @@ import com.redhat.example.entity.User;
 import com.redhat.example.exception.UserNotFoundException;
 import com.redhat.example.repository.UserRepository;
 
+
+
 @RestController
 public class UserResource {
+	
+	private Logger logger = LoggerFactory.getLogger(UserResource.class);
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -36,21 +42,25 @@ public class UserResource {
 
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers() {
-		return userRepository.findAll();
+		logger.info("COnsultar usuario");
+		List<User> users = userRepository.findAll();
+		
+		for(User user: users) {
+			logger.info(user.toString());
+		}
+		
+		return users;
 	}
 	
 
 	@GetMapping("/usersAll")
 	public List<User> retrieveAll() {
-		
-		System.out.println("COnsultar usuario");
+		logger.info("COnsultar usuario");
 		List<User> users = userRepository.findAll();
-		
 		for(User user: users) {
-			System.out.println(user);
+			logger.info(user.toString());
 		}
-		
-		return userRepository.findAll();
+		return users;
 	}
 
 	@GetMapping("/users/{id}")

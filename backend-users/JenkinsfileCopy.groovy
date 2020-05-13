@@ -63,7 +63,7 @@ pipeline {
 
                         writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
 
-                        sh (script : 'vi application-dev.properties', returnStdout: true)
+                        sh (script : 'cat application-dev.properties', returnStdout: true)
                   //replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
                     }
                 }

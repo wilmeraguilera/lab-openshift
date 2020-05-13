@@ -55,23 +55,21 @@ pipeline {
 
                 dir('backend-users/src/main/resources'){
                     script {
-
+                        //leer propiedades
                         def props = readProperties  file: 'application.properties'
+
+                        def textTemplate = readFile "application-env.properties"
+                        echo "Contenido leido: "+text
+
                         props.each { property ->
                             echo property.key
                             echo property.value
-                            //content = content.replace('#{' + property.key + '}', property.value)
+                            textTemplate = textTemplate.replace('#{' + property.key + '}', property.value)
                         }
-
-                        def text = readFile "application-env.properties"
-
-                        echo "Contenido leido: "+text
-
-                        text = text.replace('${server.port}', '9990')
 
                         writeFile(file: "application-dev.properties", text: text, encoding: "UTF-8")
 
-                        sh (script : 'cat application-dev.properties', returnStdout: true)
+
                   //replaceValuesInFile('application.properties','application-dev.properties','application-env.properties')
                     }
                 }

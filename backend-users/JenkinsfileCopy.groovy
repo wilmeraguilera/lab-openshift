@@ -57,7 +57,7 @@ pipeline {
                     script {
 
                         def props = readProperties  file: 'application.properties'
-                        for(def en : props.entrySet()) {
+                        for(Set en : props.entrySet()) {
                             echo en
                         }
 

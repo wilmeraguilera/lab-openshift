@@ -51,7 +51,7 @@ pipeline {
                 dir("backend-users"){
                     echo "Init Running Code Analysis"
                     withSonarQubeEnv('sonar') {
-                        sh "$mvn sonar:sonar " +
+                        sh "mvn sonar:sonar " +
                                 "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
 
                     }

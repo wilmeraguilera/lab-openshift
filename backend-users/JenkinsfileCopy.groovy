@@ -28,6 +28,9 @@ pipeline {
         stage("Unit Test") {
             steps {
                 echo "Init Unit Test"
+                dir("backend-users") {
+                    sh "mvn test"
+                }
                 echo "End Unit Test"
             }
         }
@@ -57,7 +60,7 @@ pipeline {
                     script {
 
                         //Crear archivo de propiedades dev
-                        replaceValuesInFile('application.properties', 'application-env.properties','application-dev.properties')
+                        replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties','application-dev.properties')
 
 
                     }

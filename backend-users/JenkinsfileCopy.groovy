@@ -70,7 +70,7 @@ pipeline {
                 echo "Init Publish to Nexus"
                 //Only apply the next instruction if you have the code in a subdirectory
                 dir("backend-users") {
-                    sh "mvn install"
+                    sh "mvn install -DskipTests=true"
                     //-s ./configuration/settings-maven.xml
                 }
                 echo "End Publish to Nexus"

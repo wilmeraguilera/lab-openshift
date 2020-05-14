@@ -5,18 +5,18 @@ def artifactVersion
 def nameJar
 
 pipeline {
-    agent any
+    agent "maven-appdev"
 
     tools {
         maven 'M2-3.6.3'
         jdk 'JDK18'
     }
 
-    parameters{
-                    string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift para DEV')
-                    string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description:'Nombre del proyecto en Openshift para QA')
-                    string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description:'Nombre del proyecto en Openshift para PROD')
-                    string(name: 'appName', defaultValue: 'api-users', description:'Nombre de la aplicación')
+    parameters {
+        string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description: 'Nombre del proyecto en Openshift para DEV')
+        string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description: 'Nombre del proyecto en Openshift para QA')
+        string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description: 'Nombre del proyecto en Openshift para PROD')
+        string(name: 'appName', defaultValue: 'api-users', description: 'Nombre de la aplicación')
     }
 
     stages {
@@ -53,31 +53,23 @@ pipeline {
             steps {
                 echo "Init Unit Test"
                 dir("backend-users") {
-                    //sh "mvn test"
+                    sh "mvn test"
                 }
                 echo "End Unit Test"
             }
         }
 
 
-
         stage('SonarQube Scan') {
-            steps{
-                dir("backend-users"){
-                    /**withSonarQubeEnv('sonar') {
-                        sh "mvn sonar:sonar " +
-                                "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
-
-                    }
-                    sleep(10)
-                    timeout(time: 1, unit: 'HOURS') {
-                        waitForQualityGate abortPipeline: true
-                    }*/
+            steps {
+                dir("backend-users") {
+                    withSonarQubeEnv('sonar') {sh "mvn sonar:sonar " +
+                     "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "}sleep(10)
+                     timeout(time: 1, unit: 'HOURS') {waitForQualityGate abortPipeline: true}
                 }
             }
 
         }
-
 
 
         stage("Publish to Nexus") {
@@ -85,7 +77,7 @@ pipeline {
                 echo "Init Publish to Nexus"
                 //Only apply the next instruction if you have the code in a subdirectory
                 dir("backend-users") {
-                    sh "mvn install -DskipTests=true"
+                    sh "mvn deploy -DskipTests=true -s ./configuration/settings-maven.xml"
                     //-s ./configuration/settings-maven.xml
                 }
                 echo "End Publish to Nexus"
@@ -98,9 +90,9 @@ pipeline {
             }
         }
 
-        stage("Build Image"){
-            steps{
-                dir("backend-users"){
+        stage("Build Image") {
+            steps {
+                dir("backend-users") {
                     echo "Inicia creación image"
                     echo tagImage
                     sh "oc start-build ${params.appName} --from-file=./target/${nameJar} --wait=true -n ${params.namespace_dev}"
@@ -113,16 +105,16 @@ pipeline {
         stage("Deploy DEV") {
             steps {
 
-                dir('backend-users/src/main/resources'){
+                dir('backend-users/src/main/resources') {
                     script {
 
                         //Crear archivo de propiedades dev
-                        replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties','application.properties')
+                        replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties', 'application.properties')
 
                     }
                 }
 
-                dir("backend-users"){
+                dir("backend-users") {
                     script {
                         //input 'Deploy?'
                         echo "Inicia Deploy"
@@ -170,17 +162,12 @@ pipeline {
 
         stage("Deploy QA") {
             steps {
-
-                dir('backend-users/src/main/resources'){
+                dir('backend-users/src/main/resources') {
                     script {
                         //Crear archivo de propiedades QA
-                        replaceValuesInFile('configEnviroment/config-qa.properties', 'application-env.properties','application-qa.properties')
-
+                        replaceValuesInFile('configEnviroment/config-qa.properties', 'application-env.properties', 'application-qa.properties')
                     }
                 }
-
-
-
             }
         }
     }
@@ -189,18 +176,17 @@ pipeline {
 /**
  * Metodo encargado de leer una archico de propiedades y reemplazar los valores en en achivo destino.
  *
- * En el archivo destino se buscan comodides de la estructura ${var}
- *
+ * En el archivo destino se buscan comodides de la estructura ${var}*
  * @param valuesPropertiesFile
  * @param templateFile
  * @param destinationFile
  * @return
  */
-def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile){
-    def props = readProperties  file: valuesPropertiesFile
+def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile) {
+    def props = readProperties file: valuesPropertiesFile
 
     def textTemplate = readFile templateFile
-    echo "Contenido leido del template: "+textTemplate
+    echo "Contenido leido del template: " + textTemplate
 
     props.each { property ->
         echo property.key
@@ -208,7 +194,7 @@ def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile){
         textTemplate = textTemplate.replace('${' + property.key + '}', property.value)
     }
 
-    echo "Contenido Reemplazado: "+textTemplate
+    echo "Contenido Reemplazado: " + textTemplate
 
     finalText = textTemplate
     writeFile(file: destinationFile, text: finalText, encoding: "UTF-8")

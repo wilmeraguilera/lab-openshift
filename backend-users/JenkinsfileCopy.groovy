@@ -127,12 +127,11 @@ pipeline {
         stage("Deploy DEV") {
             steps {
                 echo '${env.WORKSPACE}';
-                dir('backend-users/src/main/resources') {
-                    script {
-                        //Crear archivo de propiedades dev
-                        replaceValuesInFile('${env.WORKSPACE}/config-files/config-dev.properties', 'application-env.properties', 'application.properties')
 
-                    }
+                script {
+                    //Crear archivo de propiedades dev
+                    replaceValuesInFile('config-files/config-dev.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
+
                 }
 
                 dir("backend-users") {
@@ -183,12 +182,10 @@ pipeline {
 
         stage("Deploy QA") {
             steps {
-                dir('backend-users/src/main/resources') {
-                    script {
-                        //Crear archivo de propiedades QA
-                        replaceValuesInFile('configEnviroment/config-qa.properties', 'application-env.properties', 'application-qa.properties')
-                    }
-                }
+                script {
+                    //Crear archivo de propiedades dev
+                    replaceValuesInFile('config-files/config-qa.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
+                }s
             }
         }
     }

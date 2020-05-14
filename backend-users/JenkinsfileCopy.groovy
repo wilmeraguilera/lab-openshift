@@ -145,7 +145,7 @@ pipeline {
                         def countInterActual = 0
 
                         while ((rc_replicas != rc_replicas_ready) && countInterActual <= countIterMax) {
-                            sleep 5
+                            sleep 10
 
                             rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_dev} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
                             rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_dev} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
@@ -157,7 +157,7 @@ pipeline {
                             if (countInterActual > countIterMax) {
                                 echo "Se ha superado el tiempo de espera para el despliegue"
                                 echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
-                                sh "oc rollout cancel dc/${params.appName}s -n ${params.namespace}"
+                                sh "oc rollout cancel dc/${params.appName}s -n ${params.namespace_dev}"
                                 throw new Exception("Se ha superado el tiempo de espera para el despliegue")
                             }
                             echo "Termina Deploy"

@@ -128,7 +128,7 @@ pipeline {
                         echo "Inicia Deploy"
 
                         sh "oc delete cm myconfigmap --ignore-not-found=true"
-                        sh "oc create cm myconfigmap --from-file=./src/main/resources/application-dev.properties"
+                        sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties"
 
                         sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_dev}/${params.appName}:${tagImage} --source=imagestreamtag -n ${params.namespace_dev}"
                         sh "oc rollout latest dc/${params.appName} -n ${params.namespace_dev}"

@@ -169,12 +169,12 @@ pipeline {
                             if (countInterActual > countIterMax) {
                                 echo "Se ha superado el tiempo de espera para el despliegue"
                                 echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
-                                sh "oc rollout cancel dc/${params.appName}s -n ${params.namespace_dev}"
+                                sh "oc rollout cancel dc/${params.appName} -n ${params.namespace_dev}"
                                 throw new Exception("Se ha superado el tiempo de espera para el despliegue")
                             }
                             echo "Termina Deploy"
                         }
-                    }
+                    }cancel
                 }
                 echo "Deploy DEV"
             }

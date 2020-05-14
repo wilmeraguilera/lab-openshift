@@ -33,7 +33,6 @@ pipeline {
                     checkout scm
                 }
 
-                sh "mkdir config-files"
                 dir("code-app/backend-users") {
                     script {
                         //Obtener version del artefacto

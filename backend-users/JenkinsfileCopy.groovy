@@ -28,7 +28,7 @@ pipeline {
         stage("Checkout Source Code") {
             steps {
                 echo "Checkout Source Code"
-                sh "mkdir code-app"
+                sh "mkdir -p code-app"
                 dir("code-app") {
                     checkout scm
                 }
@@ -49,7 +49,7 @@ pipeline {
 
         stage("Checkout config"){
             steps{
-                sh "mkdir config-files"
+                sh "mkdir -p config-files"
                 dir("config-files"){
                     git credentialsId: 'git-wilmer', url: 'https://github.com/wilmeraguilera/lab-openshift-config.git'
                 }

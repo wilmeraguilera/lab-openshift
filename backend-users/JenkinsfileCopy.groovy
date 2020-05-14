@@ -127,7 +127,6 @@ pipeline {
                         //input 'Deploy?'
                         echo "Inicia Deploy"
 
-                        sh (script: 'pwd', returnStdout:true )
                         sh "oc delete cm myconfigmap --ignore-not-found=true"
                         sh "oc create cm myconfigmap --from-file=./src/main/resources/application-dev.properties"
 

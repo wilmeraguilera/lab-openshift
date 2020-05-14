@@ -6,14 +6,14 @@ pipeline {
         jdk 'JDK18'
     }
 
-    parameters(
+    /**parameters(
             [
                     string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift para DEV'),
                     string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description:'Nombre del proyecto en Openshift para QA'),
                     string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description:'Nombre del proyecto en Openshift para PROD'),
                     string(name: 'appName', defaultValue: 'api-users', description:'Nombre de la aplicación')
             ]
-    )
+    )*/
 
     stages {
         stage("Checkout Source Code") {

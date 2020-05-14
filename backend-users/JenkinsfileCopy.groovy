@@ -1,3 +1,9 @@
+//Variables del proceso
+def tagImage
+def artifactName
+def artifactVersion
+def nameJar
+
 pipeline {
     agent any
 
@@ -20,6 +26,13 @@ pipeline {
             steps {
                 echo "Checkout Source Code"
                 checkout scm
+                //Obtener version del artefacto
+                def pom = readMavenPom file: 'pom.xml'
+                tagImage = pom.version + "-" + currentBuild.number
+
+                artifactName = pom.artifactId
+                artifactVersion = pom.version
+                nameJar = artifactName + "-"+artifactVersion + ".jar"
             }
         }
 
@@ -80,6 +93,17 @@ pipeline {
         stage("Deploy Artifact") {
             steps {
                 echo "Deploy Artifact"
+            }
+        }
+
+        stage("Build Image"){
+            dir("backend-users"){
+                echo "Inicia creación image"
+                echo devTag
+                echo prodTag
+                sh "oc start-build ${params.appName} --from-file=./target/${nameJar} --wait=true -n ${params.namespace_dev}"
+                sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace_dev}"
+                echo "Termina creación image"
             }
         }
 

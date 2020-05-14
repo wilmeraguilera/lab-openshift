@@ -126,12 +126,9 @@ pipeline {
 
         stage("Deploy DEV") {
             steps {
-                echo '${env.WORKSPACE}';
-
                 script {
                     //Crear archivo de propiedades dev
                     replaceValuesInFile('config-files/backend-users/config-dev.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
-
                 }
 
                 dir("backend-users") {

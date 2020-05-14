@@ -11,7 +11,7 @@ pipeline {
                     string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift para DEV'),
                     string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description:'Nombre del proyecto en Openshift para QA'),
                     string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description:'Nombre del proyecto en Openshift para PROD'),
-                    string(name: 'appName', defaultValue: 'api-users', description:'Application name')
+                    string(name: 'appName', defaultValue: 'api-users', description:'Nombre de la aplicación')
             ]
     )
 
@@ -44,12 +44,24 @@ pipeline {
             }
         }
 
+        stage("Build") {
+            steps {
+                echo "Init Build"
+                //Only apply the next instruction if you have the code in a subdirectory
+                dir("backend-users") {
+                    sh "mvn install"
+                    //-s ./configuration/settings-maven.xml
+                }
+                echo "End Build"
+            }
+        }
+
         stage('SonarQube Scan') {
             dir("backend-users"){
                 echo "Init Running Code Analysis"
                 withSonarQubeEnv('sonar') {
                     sh "${mvnCmd} sonar:sonar " +
-                            "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings-maven.xml"
+                            "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
 
                 }
                 sleep(10)

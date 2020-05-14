@@ -57,22 +57,24 @@ pipeline {
         }
 
         stage('SonarQube Scan') {
-            dir("backend-users"){
-                echo "Init Running Code Analysis"
-                withSonarQubeEnv('sonar') {
-                    sh "${mvnCmd} sonar:sonar " +
-                            "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
+            steps{
+                dir("backend-users"){
+                    echo "Init Running Code Analysis"
+                    withSonarQubeEnv('sonar') {
+                        sh "${mvnCmd} sonar:sonar " +
+                                "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
 
-                }
-                sleep(10)
-
-                timeout(time: 1, unit: 'MINUTES') {
-                    def qg = waitForQualityGate()
-                    if (qg.status != 'OK') {
-                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
                     }
+                    sleep(10)
+
+                    timeout(time: 1, unit: 'MINUTES') {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                    echo "End Running Code Analysis"
                 }
-                echo "End Running Code Analysis"
             }
         }
 

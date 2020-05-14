@@ -211,12 +211,12 @@
 		<repository>
 			<id>nexus-srv-releases</id>
 			<name>Internal Releases</name>
-			<url>http://nexus3-nexus.192.168.42.59.nip.io/repository/maven-releases/</url>
+			<url>http://nexus3-nexus.apps-crc.testing/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-srv-snapshots</id>
 			<name>Internal Snapshots</name>
-			<url>http://nexus3-nexus.192.168.42.59.nip.io/repository/maven-snapshots/</url>
+			<url>http://nexus3-nexus.apps-crc.testing/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 

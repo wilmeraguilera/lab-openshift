@@ -117,7 +117,7 @@ pipeline {
                     script {
 
                         //Crear archivo de propiedades dev
-                        replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties','application-dev.properties')
+                        replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties','application.properties')
 
                     }
                 }

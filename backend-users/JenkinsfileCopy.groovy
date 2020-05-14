@@ -52,7 +52,6 @@ pipeline {
                     git credentialsId: 'git-wilmer', url: 'https://github.com/wilmeraguilera/lab-openshift-config.git'
                 }
             }
-
         }
 
         stage("Build") {
@@ -93,7 +92,6 @@ pipeline {
 
         }
 
-
         stage("Publish to Nexus") {
             steps {
                 echo "Init Publish to Nexus"
@@ -103,12 +101,6 @@ pipeline {
                     //-s ./configuration/settings-maven.xml
                 }
                 echo "End Publish to Nexus"
-            }
-        }
-
-        stage("Deploy Artifact") {
-            steps {
-                echo "Deploy Artifact"
             }
         }
 
@@ -169,7 +161,6 @@ pipeline {
                         }
                     }
                 }
-                echo "Deploy DEV"
             }
         }
 
@@ -178,6 +169,45 @@ pipeline {
                 script {
                     //Crear archivo de propiedades dev
                     replaceValuesInFile('config-files/backend-users/config-qa.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
+                }
+                dir("backend-users") {
+                    script {
+                        sh "oc delete cm myconfigmap --ignore-not-found=true -n ${params.namespace_qa}"
+                        sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties -n ${params.namespace_qa}"
+
+                        sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_qa}/${params.appName}:${tagImage} --source=imagestreamtag -n ${params.namespace_qa}"
+                        sh "oc rollout latest dc/${params.appName} -n ${params.namespace_qa}"
+
+                        def dc_version = sh(script: "oc get dc/${params.appName} -o=yaml -n ${params.namespace_qa} | grep 'latestVersion'| cut -d':' -f 2", returnStdout: true).trim();
+                        echo "Version de DeploymentConfig Actual ${dc_version}"
+
+                        def rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+                        def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+
+                        echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+
+                        def countIterMax = 20
+                        def countInterActual = 0
+
+                        while ((rc_replicas != rc_replicas_ready) && countInterActual <= countIterMax) {
+                            sleep 10
+
+                            rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+                            rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+
+                            echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+
+                            countInterActual = countInterActual + 1
+                            echo "Iteracion Actual: " + countInterActual
+                            if (countInterActual > countIterMax) {
+                                echo "Se ha superado el tiempo de espera para el despliegue"
+                                echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
+                                sh "oc rollout cancel dc/${params.appName} -n ${params.namespace_qa}"
+                                throw new Exception("Se ha superado el tiempo de espera para el despliegue")
+                            }
+                            echo "Termina Deploy"
+                        }
+                    }
                 }
             }
         }

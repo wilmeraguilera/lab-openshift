@@ -28,10 +28,12 @@ pipeline {
         stage("Checkout Source Code") {
             steps {
                 echo "Checkout Source Code"
-                sh "mkdir config-files"
+                sh "mkdir code-app"
                 dir("code-app") {
                     checkout scm
                 }
+
+                sh "mkdir config-files"
                 dir("code-app/backend-users") {
                     script {
                         //Obtener version del artefacto

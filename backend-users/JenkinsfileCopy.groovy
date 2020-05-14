@@ -40,6 +40,16 @@ pipeline {
             }
         }
 
+        stage("Checkout config"){
+            steps{
+                sh "mkdir config-files"
+                dir("config-files"){
+                    git credentialsId: 'git-wilmer', url: 'https://github.com/wilmeraguilera/lab-openshift-config.git'
+                }
+            }
+
+        }
+
         stage("Build") {
             steps {
                 echo "Init Build"

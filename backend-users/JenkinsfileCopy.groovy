@@ -28,8 +28,11 @@ pipeline {
         stage("Checkout Source Code") {
             steps {
                 echo "Checkout Source Code"
-                checkout scm
-                dir("backend-users") {
+                sh "mkdir config-files"
+                dir("code-app") {
+                    checkout scm
+                }
+                dir("code-app/backend-users") {
                     script {
                         //Obtener version del artefacto
                         def pom = readMavenPom file: 'pom.xml'
@@ -57,7 +60,7 @@ pipeline {
             steps {
                 echo "Init Build"
                 //Only apply the next instruction if you have the code in a subdirectory
-                dir("backend-users") {
+                dir("code-app/backend-users") {
                     sh "mvn -Dmaven.test.skip=true compile"
                 }
                 echo "End Build"
@@ -67,7 +70,7 @@ pipeline {
         stage("Unit Test") {
             steps {
                 echo "Init Unit Test"
-                dir("backend-users") {
+                dir("code-app/backend-users") {
                     sh "mvn test"
                 }
                 echo "End Unit Test"
@@ -77,7 +80,7 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                dir("backend-users") {
+                dir("code-app/backend-users") {
                     withSonarQubeEnv('sonar') {
                         sh "mvn sonar:sonar " +
                         "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
@@ -96,7 +99,7 @@ pipeline {
             steps {
                 echo "Init Publish to Nexus"
                 //Only apply the next instruction if you have the code in a subdirectory
-                dir("backend-users") {
+                dir("code-app/backend-users") {
                     sh "mvn deploy -DskipTests=true -s ./configuration/settings-maven.xml"
                     //-s ./configuration/settings-maven.xml
                 }
@@ -112,7 +115,7 @@ pipeline {
 
         stage("Build Image") {
             steps {
-                dir("backend-users") {
+                dir("code-app/backend-users") {
                     echo "Inicia creación image"
                     echo tagImage
                     sh "oc start-build ${params.appName} --from-file=./target/${nameJar} --wait=true -n ${params.namespace_dev}"
@@ -125,11 +128,13 @@ pipeline {
         stage("Deploy DEV") {
             steps {
 
-                dir('backend-users/src/main/resources') {
+                echo '${env.WORKSPACE}';
+
+                dir('code-app/backend-users/src/main/resources') {
                     script {
 
                         //Crear archivo de propiedades dev
-                        replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties', 'application.properties')
+                        replaceValuesInFile('${env.WORKSPACE}/config-files/config-dev.properties', 'application-env.properties', 'application.properties')
 
                     }
                 }

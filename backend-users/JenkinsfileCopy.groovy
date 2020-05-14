@@ -59,9 +59,6 @@ pipeline {
                     echo "End Running Code Analysis"
                 }
             }
-        }
-
-        stage("Quality Gate") {
             steps {
                 sleep(10)
                 timeout(time: 1, unit: 'HOURS') {
@@ -69,6 +66,8 @@ pipeline {
                 }
             }
         }
+
+
 
         stage("Publish to Nexus") {
             steps {

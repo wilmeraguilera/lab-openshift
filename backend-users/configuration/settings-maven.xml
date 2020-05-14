@@ -6,7 +6,7 @@
     <mirror>
       <id>nexus</id>
       <name>Nexus Public Mirror</name>
-      <url>http://nexus3-nexus.192.168.42.59.nip.io/repository/maven-public/</url>
+      <url>http://nexus3-nexus.apps-crc.testing/repository/maven-public/</url>
       <mirrorOf>*</mirrorOf>
     </mirror>
   </mirrors>

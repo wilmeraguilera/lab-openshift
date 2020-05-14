@@ -185,7 +185,7 @@ pipeline {
                 script {
                     //Crear archivo de propiedades dev
                     replaceValuesInFile('config-files/config-qa.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
-                }s
+                }
             }
         }
     }

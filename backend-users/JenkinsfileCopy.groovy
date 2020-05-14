@@ -137,9 +137,6 @@ pipeline {
             steps {
                dir("backend-users") {
                     script {
-                        //input 'Deploy?'
-                        echo "Inicia Deploy"
-
                         sh "oc delete cm myconfigmap --ignore-not-found=true -n ${params.namespace_dev}"
                         sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties -n ${params.namespace_dev}"
 

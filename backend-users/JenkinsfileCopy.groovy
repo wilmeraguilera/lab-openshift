@@ -132,7 +132,6 @@ pipeline {
 
                 dir('code-app/backend-users/src/main/resources') {
                     script {
-
                         //Crear archivo de propiedades dev
                         replaceValuesInFile('${env.WORKSPACE}/config-files/config-dev.properties', 'application-env.properties', 'application.properties')
 

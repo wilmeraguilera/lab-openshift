@@ -26,13 +26,16 @@ pipeline {
             steps {
                 echo "Checkout Source Code"
                 checkout scm
-                //Obtener version del artefacto
-                def pom = readMavenPom file: 'pom.xml'
-                tagImage = pom.version + "-" + currentBuild.number
 
-                artifactName = pom.artifactId
-                artifactVersion = pom.version
-                nameJar = artifactName + "-"+artifactVersion + ".jar"
+                script{
+                    //Obtener version del artefacto
+                    def pom = readMavenPom file: 'pom.xml'
+                    tagImage = pom.version + "-" + currentBuild.number
+
+                    artifactName = pom.artifactId
+                    artifactVersion = pom.version
+                    nameJar = artifactName + "-"+artifactVersion + ".jar"
+                }
             }
         }
 

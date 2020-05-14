@@ -97,13 +97,15 @@ pipeline {
         }
 
         stage("Build Image"){
-            dir("backend-users"){
-                echo "Inicia creación image"
-                echo devTag
-                echo prodTag
-                sh "oc start-build ${params.appName} --from-file=./target/${nameJar} --wait=true -n ${params.namespace_dev}"
-                sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace_dev}"
-                echo "Termina creación image"
+            steps{
+                dir("backend-users"){
+                    echo "Inicia creación image"
+                    echo devTag
+                    echo prodTag
+                    sh "oc start-build ${params.appName} --from-file=./target/${nameJar} --wait=true -n ${params.namespace_dev}"
+                    sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace_dev}"
+                    echo "Termina creación image"
+                }
             }
         }
 

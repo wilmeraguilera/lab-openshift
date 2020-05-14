@@ -6,6 +6,15 @@ pipeline {
         jdk 'JDK18'
     }
 
+    parameters(
+            [
+                    string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift para DEV'),
+                    string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description:'Nombre del proyecto en Openshift para QA'),
+                    string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description:'Nombre del proyecto en Openshift para PROD'),
+                    string(name: 'appName', defaultValue: 'api-users', description:'Application name')
+            ]
+    )
+
     stages {
         stage("Checkout Source Code") {
             steps {
@@ -29,15 +38,29 @@ pipeline {
             steps {
                 echo "Init Unit Test"
                 dir("backend-users") {
-                    sh "mvn test"
+                    //sh "mvn test"
                 }
                 echo "End Unit Test"
             }
         }
 
-        stage("Execute Sonar analysis") {
-            steps {
-                echo "Execute Sonar analysis"
+        stage('SonarQube Scan') {
+            dir("backend-users"){
+                echo "Init Running Code Analysis"
+                withSonarQubeEnv('sonar') {
+                    sh "${mvnCmd} sonar:sonar " +
+                            "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings-maven.xml"
+
+                }
+                sleep(10)
+
+                timeout(time: 1, unit: 'MINUTES') {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+                echo "End Running Code Analysis"
             }
         }
 
@@ -61,7 +84,6 @@ pipeline {
 
                         //Crear archivo de propiedades dev
                         replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties','application-dev.properties')
-
 
                     }
                 }

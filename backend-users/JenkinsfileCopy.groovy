@@ -5,9 +5,12 @@ def artifactVersion
 def nameJar
 
 pipeline {
-    agent {
-        label "maven-appdev"
-    }
+
+    agent any
+
+    //agent {
+    //    label "maven-appdev"
+    //}
 
     tools {
         maven 'M2-3.6.3'

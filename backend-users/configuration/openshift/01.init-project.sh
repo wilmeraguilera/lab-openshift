@@ -2,13 +2,13 @@
 oc new-project dev-admin-users --display-name "dev-admin-users"
 
 #Adicionar permisos al service-account del namespace de Jenkins
-oc policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n dev-admin-users
+oc policy add-role-to-user edit system:serviceaccount:jenkins-shared:jenkins -n dev-admin-users
 
 #Crear BuildConfig de tipo binario y referenciando la imagen bade de Java
-oc new-build --binary=true --name="api-users" openshift/openjdk18-openshift  -n dev-admin-users
+oc new-build --binary=true --name="api-users" openshift/java:8  -n dev-admin-users
 
 #Crear el DeploymentConfig
-oc new-app dev-admin-users/api-users:0.0-0 --name=api-users --allow-missing-imagestream-tags=true -n dev-admin-users
+oc new-app dev-admin-users/api-users:latest --name=api-users --allow-missing-imagestream-tags=true -n dev-admin-users
 
 #De manera opcional se pueden configurar los Limites de recursos para la aplicación
 oc set resources dc api-users --limits=memory=800Mi,cpu=1000m --requests=memory=600Mi,cpu=500m

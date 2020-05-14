@@ -141,6 +141,16 @@ pipeline {
     }
 }
 
+/**
+ * Metodo encargado de leer una archico de propiedades y reemplazar los valores en en achivo destino.
+ *
+ * En el archivo destino se buscan comodides de la estructura ${var}
+ *
+ * @param valuesPropertiesFile
+ * @param templateFile
+ * @param destinationFile
+ * @return
+ */
 def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile){
     def props = readProperties  file: valuesPropertiesFile
 

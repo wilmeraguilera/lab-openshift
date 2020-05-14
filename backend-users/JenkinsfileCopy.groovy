@@ -49,22 +49,18 @@ pipeline {
         stage('SonarQube Scan') {
             steps{
                 dir("backend-users"){
-                    echo "Init Running Code Analysis"
                     withSonarQubeEnv('sonar') {
                         sh "mvn sonar:sonar " +
                                 "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
 
                     }
+                    sleep(10)
+                    timeout(time: 1, unit: 'HOURS') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
 
-                    echo "End Running Code Analysis"
-                }
-            }
-            steps {
-                sleep(10)
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
         }
 
 
@@ -95,6 +91,20 @@ pipeline {
 
                         //Crear archivo de propiedades dev
                         replaceValuesInFile('configEnviroment/config-dev.properties', 'application-env.properties','application-dev.properties')
+
+                    }
+                }
+                echo "Deploy DEV"
+            }
+        }
+
+        stage("Deploy QA") {
+            steps {
+
+                dir('backend-users/src/main/resources'){
+                    script {
+                        //Crear archivo de propiedades QA
+                        replaceValuesInFile('configEnviroment/config-qa.properties', 'application-env.properties','application-qa.properties')
 
                     }
                 }

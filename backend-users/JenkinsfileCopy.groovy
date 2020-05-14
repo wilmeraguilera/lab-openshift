@@ -12,14 +12,12 @@ pipeline {
         jdk 'JDK18'
     }
 
-    /**parameters(
-            [
-                    string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift para DEV'),
-                    string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description:'Nombre del proyecto en Openshift para QA'),
-                    string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description:'Nombre del proyecto en Openshift para PROD'),
+    parameters{
+                    string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift para DEV')
+                    string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description:'Nombre del proyecto en Openshift para QA')
+                    string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description:'Nombre del proyecto en Openshift para PROD')
                     string(name: 'appName', defaultValue: 'api-users', description:'Nombre de la aplicación')
-            ]
-    )*/
+    }
 
     stages {
         stage("Checkout Source Code") {
@@ -107,7 +105,7 @@ pipeline {
                     echo devTag
                     echo prodTag
                     sh "oc start-build ${params.appName} --from-file=./target/${nameJar} --wait=true -n ${params.namespace_dev}"
-                    sh "oc tag ${params.appName}:latest ${params.appName}:${devTag} -n ${params.namespace_dev}"
+                    sh "oc tag ${params.appName}:latest ${params.appName}:${tagImage} -n ${params.namespace_dev}"
                     echo "Termina creación image"
                 }
             }

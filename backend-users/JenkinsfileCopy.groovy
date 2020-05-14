@@ -62,7 +62,7 @@ pipeline {
         stage('SonarQube Scan') {
             steps{
                 dir("backend-users"){
-                    withSonarQubeEnv('sonar') {
+                    /**withSonarQubeEnv('sonar') {
                         sh "mvn sonar:sonar " +
                                 "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
 
@@ -70,7 +70,7 @@ pipeline {
                     sleep(10)
                     timeout(time: 1, unit: 'HOURS') {
                         waitForQualityGate abortPipeline: true
-                    }
+                    }*/
                 }
             }
 

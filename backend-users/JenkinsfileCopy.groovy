@@ -44,17 +44,7 @@ pipeline {
             }
         }
 
-        stage("Build") {
-            steps {
-                echo "Init Build"
-                //Only apply the next instruction if you have the code in a subdirectory
-                dir("backend-users") {
-                    sh "mvn install"
-                    //-s ./configuration/settings-maven.xml
-                }
-                echo "End Build"
-            }
-        }
+
 
         stage('SonarQube Scan') {
             steps{
@@ -80,13 +70,19 @@ pipeline {
 
         stage("Publish to Nexus") {
             steps {
-                echo "Publish to Nexus"
+                echo "Init Publish to Nexus"
+                //Only apply the next instruction if you have the code in a subdirectory
+                dir("backend-users") {
+                    sh "mvn install"
+                    //-s ./configuration/settings-maven.xml
+                }
+                echo "End Publish to Nexus"
             }
         }
 
-        stage("Build Image") {
+        stage("Deploy Artifact") {
             steps {
-                echo "Build Image"
+                echo "Deploy Artifact"
             }
         }
 

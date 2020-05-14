@@ -121,20 +121,6 @@ pipeline {
 
                     }
                 }
-                echo "Deploy DEV"
-            }
-        }
-
-        stage("Deploy QA") {
-            steps {
-
-                dir('backend-users/src/main/resources'){
-                    script {
-                        //Crear archivo de propiedades QA
-                        replaceValuesInFile('configEnviroment/config-qa.properties', 'application-env.properties','application-qa.properties')
-
-                    }
-                }
 
                 dir("backend-users"){
                     script {
@@ -142,9 +128,9 @@ pipeline {
                         echo "Inicia Deploy"
 
                         sh "oc delete cm myconfigmap --ignore-not-found=true"
-                        sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties"
+                        sh "oc create cm myconfigmap --from-file=./src/main/resources/application-dev.properties"
 
-                        sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_dev}/${params.appName}:${devTag} --source=imagestreamtag -n ${params.namespace_dev}"
+                        sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_dev}/${params.appName}:${tagImage} --source=imagestreamtag -n ${params.namespace_dev}"
                         sh "oc rollout latest dc/${params.appName} -n ${params.namespace_dev}"
 
                         def dc_version = sh(script: "oc get dc/${params.appName} -o=yaml -n ${params.namespace_dev} | grep 'latestVersion'| cut -d':' -f 2", returnStdout: true).trim();
@@ -178,6 +164,22 @@ pipeline {
                         }
                     }
                 }
+                echo "Deploy DEV"
+            }
+        }
+
+        stage("Deploy QA") {
+            steps {
+
+                dir('backend-users/src/main/resources'){
+                    script {
+                        //Crear archivo de propiedades QA
+                        replaceValuesInFile('configEnviroment/config-qa.properties', 'application-env.properties','application-qa.properties')
+
+                    }
+                }
+
+
 
             }
         }

@@ -82,7 +82,7 @@ pipeline {
                 dir("backend-users") {
                     withSonarQubeEnv('sonar') {
                         sh "mvn sonar:sonar " +
-                        "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
+                                "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
                     }
                     sleep(10)
                     timeout(time: 1, unit: 'HOURS') {
@@ -124,19 +124,14 @@ pipeline {
             }
         }
 
-        stage('Execute config'){
-            steps{
+        stage("Deploy DEV") {
+            steps {
                 script {
                     //Crear archivo de propiedades dev
                     replaceValuesInFile('config-files/backend-users/config-dev.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
                 }
-            }
-        }
-
-        stage("Deploy DEV") {
-            steps {
-               dir("backend-users") {
-                   script {
+                dir("backend-users") {
+                    script {
                         sh "oc delete cm myconfigmap --ignore-not-found=true -n ${params.namespace_dev}"
                         sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties -n ${params.namespace_dev}"
 

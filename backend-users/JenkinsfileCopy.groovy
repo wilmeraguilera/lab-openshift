@@ -53,7 +53,7 @@ pipeline {
             steps {
                 echo "Init Unit Test"
                 dir("backend-users") {
-                    sh "mvn test"
+                    //sh "mvn test"
                 }
                 echo "End Unit Test"
             }

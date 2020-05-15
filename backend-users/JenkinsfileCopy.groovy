@@ -175,7 +175,7 @@ pipeline {
                         sh "oc delete cm myconfigmap --ignore-not-found=true -n ${params.namespace_qa}"
                         sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties -n ${params.namespace_qa}"
 
-                        sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_qa}/${params.appName}:${tagImage} --source=imagestreamtag -n ${params.namespace_qa}"
+                        sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_dev}/${params.appName}:${tagImage} --source=imagestreamtag -n ${params.namespace_qa}"
                         sh "oc rollout latest dc/${params.appName} -n ${params.namespace_qa}"
 
                         def dc_version = sh(script: "oc get dc/${params.appName} -o=yaml -n ${params.namespace_qa} | grep 'latestVersion'| cut -d':' -f 2", returnStdout: true).trim();

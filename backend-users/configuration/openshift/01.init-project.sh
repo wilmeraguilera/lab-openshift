@@ -1,7 +1,7 @@
 export NAMESPACE_DEV=dev-admin-users
 export NAMESPACE_QA=qa-admin-users
 
-##Proyecto de Ejemplo Spring-boot pipelines
+##Proyecto de Ejemplo Spring-boot pipelines para dev
 oc new-project "$NAMESPACE_DEV" --display-name "$NAMESPACE_DEV"
 
 #Adicionar permisos al service-account del namespace de Jenkins
@@ -37,6 +37,15 @@ oc set probe dc/api-users -n "$NAMESPACE_DEV" --readiness --failure-threshold 3 
 
 
 #Ambiente de QA
+
+##Proyecto de Ejemplo Spring-boot pipelines para dev
+oc new-project "$NAMESPACE_QA" --display-name "$NAMESPACE_QA"
+
+#Asinar permisos para que el namespace de qa vea imagenes del name space de dev
+oc policy add-role-to-user system:image-puller system:serviceaccount:"$NAMESPACE_QA":default  -n "$NAMESPACE_DEV"
+
+#Adicionar permisos al service-account del namespace de Jenkins
+oc policy add-role-to-user edit system:serviceaccount:jenkins-shared:jenkins -n "$NAMESPACE_QA"
 
 #Crear el DeploymentConfig
 oc new-app "$NAMESPACE_DEV"/api-users:latest --name=api-users --allow-missing-imagestream-tags=true -n "$NAMESPACE_QA"

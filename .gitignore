@@ -5,3 +5,5 @@ target/
 .settings
 /.idea/lab-openshift.iml
 /.idea/workspace.xml
+/.idea/modules.xml
+/.idea/vcs.xml

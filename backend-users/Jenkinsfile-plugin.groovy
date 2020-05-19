@@ -36,7 +36,6 @@ pipeline {
           echo "PATH is: $PATH"
           echo "JAVA is: $JAVA_HOME"
           echo "Path: ${PATH}"
-          echo "M2_HOME = ${M2_HOME}"
           sh 'java -version'
 
 

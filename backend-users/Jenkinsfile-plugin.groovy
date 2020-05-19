@@ -29,31 +29,21 @@ pipeline {
       steps {
         echo "Init Checkout Source Code"
         checkout scm
-        dir("backend-users") {
-          script {
+        script {
+          dir("backend-users") {
             //Obtener version del artefacto
             def pom = readMavenPom file: 'pom.xml'
             tagImage = pom.version + "-" + currentBuild.number
 
-                checkout scm
-
-                dir("backend-users") {
-                    script {
-                        //Obtener version del artefacto
-                        def pom = readMavenPom file: 'pom.xml'
-                        tagImage = pom.version + "-" + currentBuild.number
-
-                        artifactName = pom.artifactId
-                        artifactVersion = pom.version
-                        nameJar = artifactName + "-" + artifactVersion + ".jar"
-                    }
-                }
-            }
+            artifactName = pom.artifactId
+            artifactVersion = pom.version
+            nameJar = artifactName + "-" + artifactVersion + ".jar"
+          }
         }
         echo "end Checkout Source Code"
       }
     }
-
+    
     stage("Checkout config"){
       steps{
         sh "mkdir -p config-files"

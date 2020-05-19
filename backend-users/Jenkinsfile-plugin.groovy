@@ -160,7 +160,7 @@ pipeline {
 
                 openshift.selector('configmap', 'config-backend-users').delete(' --ignore-not-found=true ')
                 openshift.create('configmap', 'config-backend-users', '--from-file=./src/main/resources/application.properties')
-                openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace_dev}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
+                openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace_dev}/${params.appName}:${devTag}", " --source=imagestreamtag")
 
                 // Deploy the development application.
                 openshift.selector("dc", "${params.appName}").rollout().latest();

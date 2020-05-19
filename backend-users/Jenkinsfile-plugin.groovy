@@ -26,11 +26,9 @@ pipeline {
 
   stages {
     stage("Checkout Source Code") {
+      echo "Init Checkout Source Code"
       steps {
-        echo "Checkout Source Code"
-
         checkout scm
-
         dir("backend-users") {
           script {
             //Obtener version del artefacto
@@ -43,6 +41,7 @@ pipeline {
           }
         }
       }
+      echo "end Checkout Source Code"
     }
 
     stage("Checkout config"){
@@ -66,13 +65,13 @@ pipeline {
     }
 
     stage("Unit Test") {
+      echo "Init Unit Test"
       steps {
-        echo "Init Unit Test"
         dir("backend-users") {
           sh "mvn test"
         }
-        echo "End Unit Test"
       }
+      echo "End Unit Test"
     }
 
 

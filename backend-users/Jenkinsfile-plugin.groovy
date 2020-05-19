@@ -33,8 +33,8 @@ pipeline {
         echo "Init Checkout Source Code"
         checkout scm
         script {
-          sh "export JAVA_HOME=${env.JAVA_HOME}"
-          sh "export PATH=${env.PATH}"
+          env.JAVA_HOME="${tool 'JDK18'}"
+          env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
           echo "PATH is: $PATH"
           echo "JAVA is: $JAVA_HOME"
           echo "Path: ${PATH}"

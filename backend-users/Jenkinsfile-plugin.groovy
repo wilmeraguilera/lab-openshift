@@ -32,7 +32,7 @@ pipeline {
         script {
           echo "Path: ${PATH}"
           echo "M2_HOME = ${M2_HOME}"
-          sh 'mvn clean'
+          sh 'java -version'
 
 
           dir("backend-users") {

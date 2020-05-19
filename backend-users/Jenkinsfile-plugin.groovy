@@ -12,9 +12,13 @@ pipeline {
   //    label "maven-appdev"
   //}
 
-  tools {
-    maven 'M2-3.6.3'
-    jdk 'JDK18'
+  enviroment {
+    //maven 'M2-3.6.3'
+    MAVEN_HOME = tool('M2-3.6.3')
+    JAVA_HOME = tool('JDK18')
+    echo "PATH is: $PATH"
+    echo "JAVA is: $JAVA_HOME"
+
   }
 
   parameters {

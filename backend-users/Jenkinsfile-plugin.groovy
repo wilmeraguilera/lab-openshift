@@ -6,13 +6,16 @@ def nameJar
 
 pipeline {
 
-  //agent any
+  agent any
 
-  agent {
+  /*agent {
       label "maven-appdev"
+  }*/
+
+  environment{
+    env.JAVA_HOME = tool name: 'JDK18', type: 'jdk'
+    env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
   }
-
-
 
   parameters {
     string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description: 'Nombre del proyecto en Openshift para DEV')

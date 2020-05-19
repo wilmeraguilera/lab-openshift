@@ -16,7 +16,7 @@ pipeline {
     //maven 'M2-3.6.3'
     MAVEN_HOME = tool('M2-3.6.3')
     JAVA_HOME = tool('JDK18')
-    //PATH = "$PATH:$JAVA_HOME/bin:$MAVEN_HOME"
+    PATH = "$PATH:$JAVA_HOME/bin:$MAVEN_HOME"
 
   }
 
@@ -34,7 +34,8 @@ pipeline {
         checkout scm
         script {
           sh "export JAVA_HOME=${env.JAVA_HOME}"
-          echo "PATH is: $PATH"
+          sh "export PATH = ${PATH}"
+          echo """PATH is: $PATH"
           echo "JAVA is: $JAVA_HOME"
           echo "Path: ${PATH}"
           sh 'java -version'

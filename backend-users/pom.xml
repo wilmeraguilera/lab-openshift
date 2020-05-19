@@ -13,7 +13,7 @@
 		<version>2.2.5.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<name>demo</name>
+	<name>backend-users</name>
 	<description>BackEnd Users for Spring Boot</description>
 
 	<properties>

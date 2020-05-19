@@ -106,10 +106,12 @@ pipeline {
 
     stage("Build Image") {
       steps {
-        dir("backend-users") {
-          openshift.withProject("${params.namespace_dev}") {
-            openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")
-            openshift.tag("${params.appName}:latest", "${params.appName}:${tagImage}")
+        script {
+          dir("backend-users") {
+            openshift.withProject("${params.namespace_dev}") {
+              openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")
+              openshift.tag("${params.appName}:latest", "${params.appName}:${tagImage}")
+            }
           }
         }
       }

@@ -8,13 +8,13 @@ pipeline {
 
   agent any
 
-  /*agent {
-      label "maven-appdev"
-  }*/
+  //agent {
+  //    label "maven-appdev"
+  //}
 
-  environment{
-    env.JAVA_HOME = tool name: 'JDK18', type: 'jdk'
-    env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+  tools {
+    maven 'M2-3.6.3'
+    jdk 'JDK18'
   }
 
   parameters {
@@ -30,7 +30,7 @@ pipeline {
         echo "Init Checkout Source Code"
         checkout scm
         script {
-          sh 'java -version'
+          echo "Path: ${PATH}"
           dir("backend-users") {
             //Obtener version del artefacto
             def pom = readMavenPom file: 'pom.xml'

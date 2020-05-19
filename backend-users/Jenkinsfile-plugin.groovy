@@ -15,6 +15,7 @@ pipeline {
   tools {
     maven 'M2-3.6.3'
     jdk 'JDK18'
+    env.JAVA_HOME = "${jdk}"
   }
 
   parameters {

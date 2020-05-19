@@ -8,15 +8,11 @@ pipeline {
 
   agent any
 
-  //agent {
-  //    label "maven-appdev"
-  //}
-
-  tools {
-    maven 'M2-3.6.3'
-    jdk 'JDK18'
-    env.JAVA_HOME = "${jdk}"
+  agent {
+      label "maven-appdev"
   }
+
+
 
   parameters {
     string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description: 'Nombre del proyecto en Openshift para DEV')

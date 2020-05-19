@@ -35,6 +35,7 @@ pipeline {
         script {
           env.JAVA_HOME="${tool 'JDK18'}"
           env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+          sh 'java -version'
           echo "PATH is: $PATH"
           echo "JAVA is: $JAVA_HOME"
           echo "Path: ${PATH}"

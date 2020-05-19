@@ -20,10 +20,10 @@ oc set resources dc api-users --limits=memory=800Mi,cpu=1000m --requests=memory=
 oc set triggers dc/api-users --remove-all -n "$NAMESPACE_DEV"
 
 #Creación del configmap
-oc create configmap myconfigmap
+oc create configmap config-backend-users
 
 #Asociación del config map al DeploymentConfig
-oc set volume dc/api-users --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=myconfigmap
+oc set volume dc/api-users --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=config-backend-users
 
 #Crear el service a partir del deploymentConfig, en este caso el puerto 8080
 oc expose dc api-users --port 8080 -n "$NAMESPACE_DEV"
@@ -57,10 +57,10 @@ oc set resources dc api-users --limits=memory=800Mi,cpu=1000m --requests=memory=
 oc set triggers dc/api-users --remove-all -n "$NAMESPACE_QA"
 
 #Creación del configmap
-oc create configmap myconfigmap
+oc create configmap config-backend-users
 
 #Asociación del config map al DeploymentConfig
-oc set volume dc/api-users --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=myconfigmap
+oc set volume dc/api-users --add --name=map-application --mount-path=/deployments/config/application.properties --sub-path=application.properties --configmap-name=config-backend-users
 
 #Crear el service a partir del deploymentConfig, en este caso el puerto 8080
 oc expose dc api-users --port 8080 -n "$NAMESPACE_QA"

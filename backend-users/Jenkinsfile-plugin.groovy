@@ -126,8 +126,8 @@ pipeline {
             openshift.withCluster() {
               openshift.withProject("${params.namespace_dev}") {
 
-                openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
-                openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
+                openshift.selector('configmap', 'config-backend-users').delete(' --ignore-not-found=true ')
+                openshift.create('configmap', 'config-backend-users', '--from-file=./src/main/resources/application.properties')
                 openshift.set("image", "dc/${OPENSHIFT_APP_NAME}", "${OPENSHIFT_APP_NAME}=${OPENSHIFT_NAMESPACE_DEV}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
                 openshift.selector("dc", "${params.appName}").rollout().latest();
                 sleep 2
@@ -158,8 +158,8 @@ pipeline {
             openshift.withCluster() {
               openshift.withProject("${params.namespace_qa}") {
 
-                openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
-                openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
+                openshift.selector('configmap', 'config-backend-users').delete(' --ignore-not-found=true ')
+                openshift.create('configmap', 'config-backend-users', '--from-file=./src/main/resources/application.properties')
                 openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace_dev}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
 
                 // Deploy the development application.

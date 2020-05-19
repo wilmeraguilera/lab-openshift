@@ -31,9 +31,6 @@ pipeline {
         checkout scm
         dir("backend-users") {
           script {
-            //Obtener version del artefacto
-            def pom = readMavenPom file: 'pom.xml'
-            tagImage = pom.version + "-" + currentBuild.number
 
                 checkout scm
 

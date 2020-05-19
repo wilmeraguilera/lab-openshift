@@ -26,8 +26,8 @@ pipeline {
 
   stages {
     stage("Checkout Source Code") {
-      echo "Init Checkout Source Code"
       steps {
+        echo "Init Checkout Source Code"
         checkout scm
         dir("backend-users") {
           script {
@@ -40,8 +40,8 @@ pipeline {
             nameJar = artifactName + "-" + artifactVersion + ".jar"
           }
         }
+        echo "end Checkout Source Code"
       }
-      echo "end Checkout Source Code"
     }
 
     stage("Checkout config"){
@@ -65,13 +65,13 @@ pipeline {
     }
 
     stage("Unit Test") {
-      echo "Init Unit Test"
       steps {
+        echo "Init Unit Test"
         dir("backend-users") {
           sh "mvn test"
         }
+        echo "End Unit Test"
       }
-      echo "End Unit Test"
     }
 
 
@@ -92,13 +92,13 @@ pipeline {
     }
 
     stage("Publish to Nexus") {
-      echo "Init Publish to Nexus"
       steps {
+        echo "Init Publish to Nexus"
         dir("backend-users") {
           sh "mvn deploy -DskipTests=true -s ./configuration/settings-maven.xml"
         }
+        echo "End Publish to Nexus"
       }
-      echo "End Publish to Nexus"
     }
 
     stage("Build Image") {
@@ -177,46 +177,6 @@ pipeline {
                   rc = openshift.selector("rc", "${OPENSHIFT_APP_NAME}-${dc_version}").object()
                 }
               }
-            }
-          }
-        }
-
-        dir("backend-users") {
-          script {
-            sh "oc delete cm myconfigmap --ignore-not-found=true -n ${params.namespace_qa}"
-            sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties -n ${params.namespace_qa}"
-
-            sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_dev}/${params.appName}:${tagImage} --source=imagestreamtag -n ${params.namespace_qa}"
-            sh "oc rollout latest dc/${params.appName} -n ${params.namespace_qa}"
-
-            def dc_version = sh(script: "oc get dc/${params.appName} -o=yaml -n ${params.namespace_qa} | grep 'latestVersion'| cut -d':' -f 2", returnStdout: true).trim();
-            echo "Version de DeploymentConfig Actual ${dc_version}"
-
-            def rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-            def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
-
-            echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
-
-            def countIterMax = 20
-            def countInterActual = 0
-
-            while ((rc_replicas != rc_replicas_ready) && countInterActual <= countIterMax) {
-              sleep 10
-
-              rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
-              rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
-
-              echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
-
-              countInterActual = countInterActual + 1
-              echo "Iteracion Actual: " + countInterActual
-              if (countInterActual > countIterMax) {
-                echo "Se ha superado el tiempo de espera para el despliegue"
-                echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
-                sh "oc rollout cancel dc/${params.appName} -n ${params.namespace_qa}"
-                throw new Exception("Se ha superado el tiempo de espera para el despliegue")
-              }
-              echo "Termina Deploy"
             }
           }
         }

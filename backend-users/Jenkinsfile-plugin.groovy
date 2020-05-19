@@ -31,6 +31,7 @@ pipeline {
         checkout scm
         script {
           echo "Path: ${PATH}"
+          echo "M2_HOME = ${M2_HOME}"
           dir("backend-users") {
             //Obtener version del artefacto
             def pom = readMavenPom file: 'pom.xml'

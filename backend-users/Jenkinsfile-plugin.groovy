@@ -93,14 +93,13 @@ pipeline {
     }
 
     stage("Publish to Nexus") {
+      echo "Init Publish to Nexus"
       steps {
-        echo "Init Publish to Nexus"
-        //Only apply the next instruction if you have the code in a subdirectory
         dir("backend-users") {
           sh "mvn deploy -DskipTests=true -s ./configuration/settings-maven.xml"
         }
-        echo "End Publish to Nexus"
       }
+      echo "End Publish to Nexus"
     }
 
     stage("Build Image") {

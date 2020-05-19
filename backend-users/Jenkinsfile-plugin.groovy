@@ -108,9 +108,11 @@ pipeline {
       steps {
         script {
           dir("backend-users") {
-            openshift.withProject("${params.namespace_dev}") {
-              openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")
-              openshift.tag("${params.appName}:latest", "${params.appName}:${tagImage}")
+            openshift.withCluster() {
+              openshift.withProject("${params.namespace_dev}") {
+                openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")
+                openshift.tag("${params.appName}:latest", "${params.appName}:${tagImage}")
+              }
             }
           }
         }
@@ -123,24 +125,25 @@ pipeline {
           //Crear archivo de propiedades dev
           replaceValuesInFile('config-files/backend-users/config-dev.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
 
-
           dir("backend-users") {
-            openshift.withProject("${params.namespace_dev}") {
+            openshift.withCluster() {
+              openshift.withProject("${params.namespace_dev}") {
 
-              openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
-              openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
-              openshift.set("image", "dc/${OPENSHIFT_APP_NAME}", "${OPENSHIFT_APP_NAME}=${OPENSHIFT_NAMESPACE_DEV}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
-              openshift.selector("dc", "${params.appName}").rollout().latest();
-              sleep 2
+                openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
+                openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
+                openshift.set("image", "dc/${OPENSHIFT_APP_NAME}", "${OPENSHIFT_APP_NAME}=${OPENSHIFT_NAMESPACE_DEV}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
+                openshift.selector("dc", "${params.appName}").rollout().latest();
+                sleep 2
 
-              // Wait for application to be deployed
-              def dc = openshift.selector("dc", "${params.appName}").object()
-              def dc_version = dc.status.latestVersion
-              def rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
-              echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
-              while (rc.spec.replicas != rc.status.readyReplicas) {
-                sleep 10
-                rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+                // Wait for application to be deployed
+                def dc = openshift.selector("dc", "${params.appName}").object()
+                def dc_version = dc.status.latestVersion
+                def rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+                echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
+                while (rc.spec.replicas != rc.status.readyReplicas) {
+                  sleep 10
+                  rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+                }
               }
             }
           }
@@ -154,27 +157,28 @@ pipeline {
           //Crear archivo de propiedades dev
           replaceValuesInFile('config-files/backend-users/config-qa.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
 
-
           dir("backend-users") {
-            openshift.withProject("${params.namespace_qa}") {
+            openshift.withCluster() {
+              openshift.withProject("${params.namespace_qa}") {
 
-              openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
-              openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
-              openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace_dev}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
+                openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
+                openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
+                openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace_dev}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
 
-              // Deploy the development application.
-              openshift.selector("dc", "${params.appName}").rollout().latest();
-              sleep 2
+                // Deploy the development application.
+                openshift.selector("dc", "${params.appName}").rollout().latest();
+                sleep 2
 
-              // Wait for application to be deployed
-              def dc = openshift.selector("dc", "${params.appName}").object()
-              def dc_version = dc.status.latestVersion
-              def rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+                // Wait for application to be deployed
+                def dc = openshift.selector("dc", "${params.appName}").object()
+                def dc_version = dc.status.latestVersion
+                def rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
 
-              echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
-              while (rc.spec.replicas != rc.status.readyReplicas) {
-                sleep 10
-                rc = openshift.selector("rc", "${OPENSHIFT_APP_NAME}-${dc_version}").object()
+                echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
+                while (rc.spec.replicas != rc.status.readyReplicas) {
+                  sleep 10
+                  rc = openshift.selector("rc", "${OPENSHIFT_APP_NAME}-${dc_version}").object()
+                }
               }
             }
           }

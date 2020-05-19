@@ -1,138 +1,167 @@
-// Jenkinsfile for Api-users - 
-// Set the tag for the development image: version + build number
-def devTag      = "0.0.0"
-
-// Set the tag for the production image: version
-def prodTag     = "0.0.0"
+//Variables del proceso
+def tagImage
+def artifactName
 def artifactVersion
-def artifactName	= ""
-def destApp = "" 
-def activeApp = ""
+def nameJar
 
-node() {
-  properties([
-      parameters(
-          [
-            string(name: 'namespace', defaultValue: 'dev-admin-users', description:'Nombre del proyecto en Openshift'),
-            string(name: 'appName', defaultValue: 'api-users', description:'Application name')
-          ]
-        )
-  ])
+pipeline {
 
-  echo "Namespace: ${params.namespace}"
-  echo "Application name: ${params.appName}"
+  agent any
 
-  //Stage de Preparación y configuración de herramientas
-  stage('Preparing'){
+  //agent {
+  //    label "maven-appdev"
+  //}
 
-    //Herramienta de Maven
-		mvnHome = tool 'M2'
-		mvnCmd = "${mvnHome}/bin/mvn "
-
-    //Definición Jdk
-		env.JAVA_HOME=tool 'JDK18'
-		env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-		sh 'java -version'
-	}
-    
-    
-  // Stage descarga código fuente y leer variables del pom
-  stage('Checkout Source') {
-	  checkout scm  
-    dir("backend-users"){
-      //Obtener version y el nombre del artefacto 
-      def pom = readMavenPom file: 'pom.xml'
-      artifactVersion = pom.version
-      artifactName = pom.artifactId
-      echo "La version del artefacto es: "+artifactVersion; 
-      echo "El nombre de artefacto es: "+artifactName; 
-
-      devTag  = "${artifactVersion}-" + currentBuild.number
-      echo "Versión de la imagen Devtag: ${devTag}"
-    }
-	        	
-  }
-  
-
-  // Stage Build App
-  stage('Build App') {
-    dir("backend-users"){
-      echo "Building version ${devTag}"
-      sh "${mvnCmd} clean install -DskipTests -s ./configuration/settings-maven.xml"
-      echo "Building complete version ${devTag}"
-    }     
-  }
-    
-  //Stage Ejecución de Pruebas unitarias
-  stage('Unit Tests') {
-    dir("backend-users"){      
-			echo "Running Unit Tests"
-  		sh "${mvnCmd}  test -s ./configuration/settings-maven.xml"
-	  }  
+  tools {
+    maven 'M2-3.6.3'
+    jdk 'JDK18'
   }
 
-  //Stage de análisis estático de código con Sonar
-  stage('SonarQube Scan') {
-    dir("backend-users"){  
-      echo "Init Running Code Analysis"
-      withSonarQubeEnv('sonar') {
-        sh "${mvnCmd} sonar:sonar " +
-              "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings-maven.xml"
-        
-      }
-      sleep(10)
-          
-      timeout(time: 1, unit: 'MINUTES') {
-        def qg = waitForQualityGate()
-        if (qg.status != 'OK') {
-          error "Pipeline aborted due to quality gate failure: ${qg.status}"
-        }
-      }
-      echo "End Running Code Analysis"
-    }
+  parameters {
+    string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description: 'Nombre del proyecto en Openshift para DEV')
+    string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description: 'Nombre del proyecto en Openshift para QA')
+    string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description: 'Nombre del proyecto en Openshift para PROD')
+    string(name: 'appName', defaultValue: 'api-users', description: 'Nombre de la aplicación')
   }
 
-  //Public en un repository (Nexus)
-	stage('Publish to Nexus') {
-    dir("backend-users"){   
-      echo "Publish to Nexus"
-      sh "${mvnCmd}  deploy -DskipTests=true -s ./configuration/settings-maven.xml"
-    }
-	}
+  stages {
+    stage("Checkout Source Code") {
+      steps {
+        echo "Checkout Source Code"
 
+        checkout scm
 
-  //Stage Build Image
-  stage('Create Image'){
-    dir("backend-users"){
-      openshift.withCluster(){
-        openshift.withProject("${params.namespace}") {
-          echo "Inicia creación image"
-          echo devTag
-          echo prodTag
-          openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${artifactName}-${artifactVersion}.jar", "--wait=true")
-          openshift.tag("${params.appName}:latest", "${params.appName}:${devTag}")
-          echo "Termina creación image"
+        dir("backend-users") {
+          script {
+            //Obtener version del artefacto
+            def pom = readMavenPom file: 'pom.xml'
+            tagImage = pom.version + "-" + currentBuild.number
+
+            artifactName = pom.artifactId
+            artifactVersion = pom.version
+            nameJar = artifactName + "-" + artifactVersion + ".jar"
+          }
         }
       }
     }
-  }
 
-  //Stage deploy Dev
-  stage('Deploy to DEV'){
-      dir("backend-users"){
-        openshift.withCluster(){
-          openshift.withProject("${params.namespace}") {
+    stage("Checkout config"){
+      steps{
+        sh "mkdir -p config-files"
+        dir("config-files"){
+          git credentialsId: 'git-wilmer', url: 'https://github.com/wilmeraguilera/lab-openshift-config.git'
+        }
+      }
+    }
 
-            //input 'Deploy?'
-            echo "Inicia Deploy"
+    stage("Build") {
+      steps {
+        echo "Init Build"
+        //Only apply the next instruction if you have the code in a subdirectory
+        dir("backend-users") {
+          sh "mvn -Dmaven.test.skip=true compile"
+        }
+        echo "End Build"
+      }
+    }
 
-            openshift.selector('configmap', 'myconfigmap').delete(' --ignore-not-found=true ')
-						openshift.create('configmap', 'myconfigmap', '--from-file=./src/main/resources/application.properties')
-            openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace}/${params.appName}:${devTag}", " --source=imagestreamtag ")
+    stage("Unit Test") {
+      steps {
+        echo "Init Unit Test"
+        dir("backend-users") {
+          sh "mvn test"
+        }
+        echo "End Unit Test"
+      }
+    }
 
-            //sh "oc rollout latest dc/${params.appName} -n ${params.namespace}"
+
+    stage('SonarQube Scan') {
+      steps {
+        dir("backend-users") {
+          withSonarQubeEnv('sonar') {
+            sh "mvn sonar:sonar " +
+                    "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
+          }
+          sleep(10)
+          timeout(time: 1, unit: 'HOURS') {
+            waitForQualityGate abortPipeline: true
+          }
+        }
+      }
+
+    }
+
+    stage("Publish to Nexus") {
+      steps {
+        echo "Init Publish to Nexus"
+        //Only apply the next instruction if you have the code in a subdirectory
+        dir("backend-users") {
+          sh "mvn deploy -DskipTests=true -s ./configuration/settings-maven.xml"
+          //-s ./configuration/settings-maven.xml
+        }
+        echo "End Publish to Nexus"
+      }
+    }
+
+    stage("Build Image") {
+      steps {
+        dir("backend-users") {
+          openshift.withProject("${params.namespace_dev}") {
+            openshift.selector("bc", "${params.appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")
+            openshift.tag("${params.appName}:latest", "${params.appName}:${tagImage}")
+          }
+        }
+      }
+    }
+
+    stage("Deploy DEV") {
+      steps {
+        script {
+          //Crear archivo de propiedades dev
+          replaceValuesInFile('config-files/backend-users/config-dev.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
+        }
+
+        dir("backend-users") {
+          openshift.withProject("${params.namespace_dev}") {
+
+            openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
+            openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
+            openshift.set("image", "dc/${OPENSHIFT_APP_NAME}", "${OPENSHIFT_APP_NAME}=${OPENSHIFT_NAMESPACE_DEV}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
             openshift.selector("dc", "${params.appName}").rollout().latest();
+            sleep 2
 
+            // Wait for application to be deployed
+            def dc = openshift.selector("dc", "${params.appName}").object()
+            def dc_version = dc.status.latestVersion
+            def rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+            echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
+            while (rc.spec.replicas != rc.status.readyReplicas) {
+              sleep 10
+              rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+            }
+          }
+        }
+      }
+    }
+
+    stage("Deploy QA") {
+      steps {
+        script {
+          //Crear archivo de propiedades dev
+          replaceValuesInFile('config-files/backend-users/config-qa.properties', 'backend-users/src/main/resources/application-env.properties', 'backend-users/src/main/resources/application.properties')
+        }
+
+        dir("backend-users"){
+          openshift.withProject("${params.namespace_qa}") {
+
+            openshift.selector('configmap', 'ms-consulta-cuentas-config').delete(' --ignore-not-found=true ')
+            openshift.create('configmap', 'ms-consulta-cuentas-config', '--from-file=./src/main/resources/appconfig.properties')
+            openshift.set("image", "dc/${params.appName}", "${params.appName}=${params.namespace_dev}/${OPENSHIFT_APP_NAME}:${devTag}", " --source=imagestreamtag")
+
+
+            // Deploy the development application.
+            openshift.selector("dc", "${params.appName}").rollout().latest();
             sleep 2
 
             // Wait for application to be deployed
@@ -141,13 +170,84 @@ node() {
             def rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
 
             echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
+
             while (rc.spec.replicas != rc.status.readyReplicas) {
-              sleep 5
-              rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
+              sleep 10
+              rc = openshift.selector("rc", "${OPENSHIFT_APP_NAME}-${dc_version}").object()
+            }
+
+          }
+        }
+
+
+        dir("backend-users") {
+          script {
+            sh "oc delete cm myconfigmap --ignore-not-found=true -n ${params.namespace_qa}"
+            sh "oc create cm myconfigmap --from-file=./src/main/resources/application.properties -n ${params.namespace_qa}"
+
+            sh "oc set image dc/${params.appName} ${params.appName}=${params.namespace_dev}/${params.appName}:${tagImage} --source=imagestreamtag -n ${params.namespace_qa}"
+            sh "oc rollout latest dc/${params.appName} -n ${params.namespace_qa}"
+
+            def dc_version = sh(script: "oc get dc/${params.appName} -o=yaml -n ${params.namespace_qa} | grep 'latestVersion'| cut -d':' -f 2", returnStdout: true).trim();
+            echo "Version de DeploymentConfig Actual ${dc_version}"
+
+            def rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+            def rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+
+            echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+
+            def countIterMax = 20
+            def countInterActual = 0
+
+            while ((rc_replicas != rc_replicas_ready) && countInterActual <= countIterMax) {
+              sleep 10
+
+              rc_replicas = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f2").trim()
+              rc_replicas_ready = sh(returnStdout: true, script: "oc get rc/${params.appName}-${dc_version} -o yaml -n ${params.namespace_qa} |grep -A 5  'status:' |grep 'readyReplicas:' | cut -d ':' -f2").trim()
+
+              echo "Replicas Deseadas ${rc_replicas} - Replicas Listas ${rc_replicas_ready}"
+
+              countInterActual = countInterActual + 1
+              echo "Iteracion Actual: " + countInterActual
+              if (countInterActual > countIterMax) {
+                echo "Se ha superado el tiempo de espera para el despliegue"
+                echo "Se procede a cancelar el despliegue y a mantener la última versión estable"
+                sh "oc rollout cancel dc/${params.appName} -n ${params.namespace_qa}"
+                throw new Exception("Se ha superado el tiempo de espera para el despliegue")
+              }
+              echo "Termina Deploy"
             }
           }
         }
-      }  
+      }
+    }
+  }
+}
+
+/**
+ * Metodo encargado de leer una archico de propiedades y reemplazar los valores en en achivo destino.
+ *
+ * En el archivo destino se buscan comodides de la estructura ${var}*
+ * @param valuesPropertiesFile
+ * @param templateFile
+ * @param destinationFile
+ * @return
+ */
+def replaceValuesInFile(valuesPropertiesFile, templateFile, destinationFile) {
+  def props = readProperties file: valuesPropertiesFile
+
+  def textTemplate = readFile templateFile
+  echo "Contenido leido del template: " + textTemplate
+
+  props.each { property ->
+    echo property.key
+    echo property.value
+    textTemplate = textTemplate.replace('${' + property.key + '}', property.value)
   }
 
+  echo "Contenido Reemplazado: " + textTemplate
+
+  finalText = textTemplate
+  writeFile(file: destinationFile, text: finalText, encoding: "UTF-8")
 }
+

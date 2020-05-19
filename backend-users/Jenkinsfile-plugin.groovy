@@ -32,7 +32,8 @@ pipeline {
         script {
           echo "Path: ${PATH}"
           echo "M2_HOME = ${M2_HOME}"
-          sh (script:'mvn -v', returnStdout: true)
+          mavenOut = sh (script:'mvn -v', returnStdout: true)
+          echo mavenOut
           dir("backend-users") {
             //Obtener version del artefacto
             def pom = readMavenPom file: 'pom.xml'

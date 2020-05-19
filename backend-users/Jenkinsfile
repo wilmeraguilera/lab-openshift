@@ -6,28 +6,34 @@ def nameJar
 
 pipeline {
 
-    agent any
+  agent any
 
-    //agent {
-    //    label "maven-appdev"
-    //}
+  //agent {
+  //    label "maven-appdev"
+  //}
 
-    tools {
-        maven 'M2-3.6.3'
-        jdk 'JDK18'
-    }
+  tools {
+    maven 'M2-3.6.3'
+    jdk 'JDK18'
+  }
 
-    parameters {
-        string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description: 'Nombre del proyecto en Openshift para DEV')
-        string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description: 'Nombre del proyecto en Openshift para QA')
-        string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description: 'Nombre del proyecto en Openshift para PROD')
-        string(name: 'appName', defaultValue: 'api-users', description: 'Nombre de la aplicación')
-    }
+  parameters {
+    string(name: 'namespace_dev', defaultValue: 'dev-admin-users', description: 'Nombre del proyecto en Openshift para DEV')
+    string(name: 'namespace_qa', defaultValue: 'qa-admin-users', description: 'Nombre del proyecto en Openshift para QA')
+    string(name: 'namespace_prod', defaultValue: 'prod-admin-users', description: 'Nombre del proyecto en Openshift para PROD')
+    string(name: 'appName', defaultValue: 'api-users', description: 'Nombre de la aplicación')
+  }
 
-    stages {
-        stage("Checkout Source Code") {
-            steps {
-                echo "Checkout Source Code"
+  stages {
+    stage("Checkout Source Code") {
+      steps {
+        echo "Init Checkout Source Code"
+        checkout scm
+        dir("backend-users") {
+          script {
+            //Obtener version del artefacto
+            def pom = readMavenPom file: 'pom.xml'
+            tagImage = pom.version + "-" + currentBuild.number
 
                 checkout scm
 
@@ -44,69 +50,70 @@ pipeline {
                 }
             }
         }
+        echo "end Checkout Source Code"
+      }
+    }
 
-        stage("Checkout config") {
-            steps {
-                sh "mkdir -p config-files"
-                dir("config-files") {
-                    git credentialsId: 'git-wilmer', url: 'https://github.com/wilmeraguilera/lab-openshift-config.git'
-                }
-            }
+    stage("Checkout config"){
+      steps{
+        sh "mkdir -p config-files"
+        dir("config-files"){
+          git credentialsId: 'git-wilmer', url: 'https://github.com/wilmeraguilera/lab-openshift-config.git'
         }
+      }
+    }
 
-        stage("Build") {
-            steps {
-                echo "Init Build"
-                //Only apply the next instruction if you have the code in a subdirectory
-                dir("backend-users") {
-                    sh "mvn -Dmaven.test.skip=true compile"
-                }
-                echo "End Build"
-            }
+    stage("Build") {
+      steps {
+        echo "Init Build"
+        //Only apply the next instruction if you have the code in a subdirectory
+        dir("backend-users") {
+          sh "mvn -Dmaven.test.skip=true compile"
         }
+        echo "End Build"
+      }
+    }
 
-        stage("Unit Test") {
-            steps {
-                echo "Init Unit Test"
-                dir("backend-users") {
-                    sh "mvn test"
-                }
-                echo "End Unit Test"
-            }
+    stage("Unit Test") {
+      steps {
+        echo "Init Unit Test"
+        dir("backend-users") {
+          sh "mvn test"
         }
+        echo "End Unit Test"
+      }
+    }
 
 
-        stage('SonarQube Scan') {
-            steps {
-                dir("backend-users") {
-                    withSonarQubeEnv('sonar') {
-                        sh "mvn sonar:sonar " +
-                                "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
-                    }
-                    sleep(10)
-                    timeout(time: 1, unit: 'HOURS') {
-                        waitForQualityGate abortPipeline: true
-                    }
-                }
-            }
-
+    stage('SonarQube Scan') {
+      steps {
+        dir("backend-users") {
+          withSonarQubeEnv('sonar') {
+            sh "mvn sonar:sonar " +
+                    "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
+          }
+          sleep(10)
+          timeout(time: 1, unit: 'HOURS') {
+            waitForQualityGate abortPipeline: true
+          }
         }
+      }
 
-        stage("Publish to Nexus") {
-            steps {
-                echo "Init Publish to Nexus"
-                //Only apply the next instruction if you have the code in a subdirectory
-                dir("backend-users") {
-                    sh "mvn deploy -DskipTests=true -s ./configuration/settings-maven.xml"
-                    //-s ./configuration/settings-maven.xml
-                }
-                echo "End Publish to Nexus"
-            }
+    }
+
+    stage("Publish to Nexus") {
+      steps {
+        echo "Init Publish to Nexus"
+        dir("backend-users") {
+          sh "mvn deploy -DskipTests=true -s ./configuration/settings-maven.xml"
         }
+        echo "End Publish to Nexus"
+      }
+    }
 
-        stage("Build Image") {
-            steps {
-                dir("backend-users") {
+    stage("Build Image") {
+      steps {
+		dir("backend-users") {
                     echo "Inicia creación image"
                     echo tagImage
                     sh "oc start-build ${params.appName} --from-file=./target/${nameJar} --wait=true -n ${params.namespace_dev}"

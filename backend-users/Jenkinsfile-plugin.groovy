@@ -34,7 +34,7 @@ pipeline {
         checkout scm
         script {
           sh "export JAVA_HOME=${env.JAVA_HOME}"
-          sh "export PATH = ${PATH}"
+          sh "export PATH = ${env.PATH}"
           echo """PATH is: $PATH"
           echo "JAVA is: $JAVA_HOME"
           echo "Path: ${PATH}"

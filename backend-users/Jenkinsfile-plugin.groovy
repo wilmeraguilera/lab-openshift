@@ -16,8 +16,7 @@ pipeline {
     //maven 'M2-3.6.3'
     MAVEN_HOME = tool('M2-3.6.3')
     JAVA_HOME = tool('JDK18')
-    echo "PATH is: $PATH"
-    echo "JAVA is: $JAVA_HOME"
+
 
   }
 
@@ -34,6 +33,8 @@ pipeline {
         echo "Init Checkout Source Code"
         checkout scm
         script {
+          echo "PATH is: $PATH"
+          echo "JAVA is: $JAVA_HOME"
           echo "Path: ${PATH}"
           echo "M2_HOME = ${M2_HOME}"
           sh 'java -version'

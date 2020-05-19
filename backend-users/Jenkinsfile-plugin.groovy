@@ -174,7 +174,7 @@ pipeline {
                 echo "Waiting for ReplicationController ${params.appName}-${dc_version} to be ready"
                 while (rc.spec.replicas != rc.status.readyReplicas) {
                   sleep 10
-                  rc = openshift.selector("rc", "${OPENSHIFT_APP_NAME}-${dc_version}").object()
+                  rc = openshift.selector("rc", "${params.appName}-${dc_version}").object()
                 }
               }
             }
@@ -186,7 +186,7 @@ pipeline {
 }
 
 /**
- * Metodo encargado de leer una archico de propiedades y reemplazar los valores en en achivo destino.
+ * Metodo encargado de leer una archivo de propiedades y reemplazar los valores en en achivo destino.
  *
  * En el archivo destino se buscan comodides de la estructura ${var}*
  * @param valuesPropertiesFile

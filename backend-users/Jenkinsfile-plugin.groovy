@@ -12,7 +12,7 @@ pipeline {
   //    label "maven-appdev"
   //}
 
-  enviroment {
+  environment {
     //maven 'M2-3.6.3'
     MAVEN_HOME = tool('M2-3.6.3')
     JAVA_HOME = tool('JDK18')

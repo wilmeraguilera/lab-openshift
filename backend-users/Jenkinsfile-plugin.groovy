@@ -6,7 +6,7 @@ def nameJar
 
 pipeline {
 
-  agent any
+  //agent any
 
   agent {
       label "maven-appdev"

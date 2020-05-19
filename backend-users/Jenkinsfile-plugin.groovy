@@ -30,6 +30,7 @@ pipeline {
         echo "Init Checkout Source Code"
         checkout scm
         script {
+          sh 'java -version'
           dir("backend-users") {
             //Obtener version del artefacto
             def pom = readMavenPom file: 'pom.xml'

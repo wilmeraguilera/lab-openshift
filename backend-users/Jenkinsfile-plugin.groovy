@@ -34,7 +34,7 @@ pipeline {
         checkout scm
         script {
           echo "Version maven"
-          withEnv(["PATH+MAVEN=${tool 'M2-3.6.3'}/bin+JAVA=${tool 'JDK18'}/bin"]) {
+          withEnv(["JAVA_HOME=${tool 'JDK18'}","PATH+MAVEN=${tool 'M2-3.6.3'}/bin", "PATH+JAVA=${tool 'JDK18'}/bin"]) {
             sh "java -version"
           }
 

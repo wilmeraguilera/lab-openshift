@@ -35,7 +35,7 @@ pipeline {
         script {
           echo "Version maven"
           withEnv(["PATH+MAVEN=${tool 'M2-3.6.3'}/bin+JAVA=${tool 'JDK18'}/bin"]) {
-            sh "mvn -v"
+            sh "java -version"
           }
 
           sh 'java -version'

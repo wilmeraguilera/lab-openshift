@@ -12,12 +12,9 @@ pipeline {
   //    label "maven-appdev"
   //}
 
-  environment {
-    //maven 'M2-3.6.3'
-    MAVEN_HOME = tool('M2-3.6.3')
-    JAVA_HOME = tool('JDK18')
-    PATH = "$PATH:$JAVA_HOME/bin:$MAVEN_HOME"
-
+  tools {
+    maven 'M2-3.6.3'
+    jdk 'JDK18'
   }
 
   parameters {
@@ -33,18 +30,8 @@ pipeline {
         echo "Init Checkout Source Code"
         checkout scm
         script {
-          echo "Version maven"
-          withEnv(["JAVA_HOME=${tool 'JDK18'}","PATH+MAVEN=${tool 'M2-3.6.3'}/bin", "PATH+JAVA=${tool 'JDK18'}/bin"]) {
-            sh "java -version"
-          }
-
-          sh 'java -version'
-          env.JAVA_HOME="${tool 'JDK18'}"
-          env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-
-          echo "PATH is: $PATH"
-          echo "JAVA is: $JAVA_HOME"
           echo "Path: ${PATH}"
+          echo "M2_HOME = ${M2_HOME}"
           sh 'java -version'
 
 

@@ -26,6 +26,12 @@ https://access.redhat.com/documentation/en-us/red_hat_codeready_containers, Ir a
 Openshift da la posibilidad de interactuar con la plataforma por línea de comando por medio del cliente oc. Para realizar la instalación del cliente oc por favor seguir las instrucciones descritas en la siguiente url.
 
 TODO COMPLETAR
+
+
+## Prerequisitos
+* Code Ready Containter instalado localmente o un ambiente de Openshift 4
+* Cliente oc instalado (Permite ehecutar comendos hacie al cluster de openshift)
+
  
 
 

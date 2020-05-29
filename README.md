@@ -1,7 +1,7 @@
-# Lab Openshift - Despliegues
+# Workshop Openshift 4
 
-Este laboratorio tiene como propósito conocer la manera de realizar despliegues en Openshift 
-y conocer las alternativas que se tienen para realizar este proceso. Adicionalmente se habla de otros recursos de openshift como configmaps.
+Este Workshop tiene como propósito conocer la plataforma Openshift orientado al despliegue de aplicaciones 
+y conocer las alternativas que se tienen para realizar este proceso. Adicionalmente se habla de otros recursos de openshift como configmaps y  volumenes persistentes.
 
 ## Tabla de Contenido
 

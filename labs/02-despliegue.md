@@ -52,12 +52,16 @@ Para el siguiente ejercicio vamos a desplegar mediente la consola web una aplica
 
 ![route](img/nexus-clic-route.png)
 
-* Seremos redirigidos a la url de Nexus.
+* Seremos redirigidos a la url de Nexus. Al analizar la url vemos que esta formada por el nombre de la aplicación, nombre del projecto y el nombre del cluster.
 
 ![Nexus Home](img/nexus-url-home.png)
 
 
+2.2 Despliegue de Aplicación desde el Código fuente.
 
+Para el siguiente ejercicio vamos a desplegar un APi Rest construido en Spring Framework. Para este caso Openshift construira la imagen a partir de nuestro código fuente y procederá a desplegarlo. Para este fin usaremos un template de Openshift llamado "".
+
+* Crear un nuevo proyecto en Openshift llamado *apps-"#USERNAME#*, en mi caso el campo **Name** quedaria con el valor *apps-user1* los campos **Display Name** y **Description** pueden ser diligenciados con cualquier valor.
  
 
 

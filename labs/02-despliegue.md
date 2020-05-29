@@ -24,22 +24,29 @@ Ejemplo: si mi usuario es user1, el nombre del  proyecto debe quedar como nexus-
 Para el siguiente ejercicio vamos a desplegar mediente la consola web una aplicación a partir de una imagen docker que está disponible en docker hub.
 
 * Ubicarse en el proyecto previamente creado.
+
 ![Seleccionar proyecto](img/selects-project.png)
+
 
 * Seleccionar la opción **Container Image**
 
   * En el campo **Image name from external registry** diligenciar *sonatype/nexus*
   * En la sección **Resources** se debe dejar seleccionado **Deployment Config** 
   * Se debe dejar marcado el check *Create a route to the application* para que se cree la ruta que nos permitirá acceder al nexus. Se espera que los campos queden diligenciados de la siguiente manera:
+  
    ![Nexus app](img/nexus-app.png)
+   
 
-* Seremos redirigidos a la pantalla **Topology** e iniciará el proceso de despliegue de la imagen. 
+* Seremos redirigidos a la pantalla **Topology** e iniciará el proceso de despliegue de la imagen.
+ 
 ![topology-nexus](img/topology-nexus.png)
+
 
 * Al dar clic sobre la aplicación aparecerá un panel en la parte derecha con 3 Tabs **Details**, **Resources** y **Monitoring**, sobre el tab de **Resources** vemos el pod que está en estado Running. Dar clic sobre el vínculo **View logs**
  Se debe esperar haste ver en los logs un mensaje que nos indique la Nexus ya inició.
  
  ![Logs Nexus](img/log-nexus-inicio.png)
+
  
 * Volvemos a la Opción **Topology** y damos clic en la fecha superior derecha de la aplicación y seremos redirigidos a la url de Nexus.
 

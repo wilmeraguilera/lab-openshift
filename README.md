@@ -5,7 +5,8 @@ y conocer las alternativas que se tienen para realizar este proceso. Adicionalme
 
 ## Tabla de Contenido
 
-1. [Despliegue de aplicaciones](labs/01-despliegue.md)
-2. [ConfigMaps](labs/02.config_maps.md)
+1. [Introducción y Pre-requisitos](labs/01-introduccion.md)
+1. [Despliegue de aplicaciones](labs/02-despliegue.md)
+2. [ConfigMaps](labs/03.config_maps.md)
 
 

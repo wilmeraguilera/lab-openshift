@@ -1,5 +1,28 @@
 # Despliegue
 
+A continuación se trabajará en varias laboratorios que nos permitirán conocer las alternativas para realizar el despliegue de aplicaciones sobre Openshift, puede existir la posibilidad de desplegar imagenes Docker o incluso Usar mecanismo como S2I (Source to Image) para generar nuestras propias  imágenes a partir de nuestro código fuente. 
+
+## 1.1 Creación de un proyecto
+
+A continuación se describen los pasos necesarios para la creación de un proyecto en Openshift.
+
+
+* Autenticarse en la consola web de Openshift.
+* Openshift proporciona dos vistas en la Consola Web (**Administrator** y **Developer**), Seleccionaremos la vista de Developer.
+* Para crear un nuevo proyecto se debe seleccionar el combo **Project** y dar clic en **Create Project**, se deben diligenciar los campos **Name**, **Display Name** y **Description**. Para este caso vamos a crear un proyecto llamado nexus que nos servirá como base para paso posterior. Es importante tener en cuenta que el nombre del proyecto debe ser único para cada cluster. Si varios usuarios van a trabajar en el mismo ambiente se debe asegurar que los nombre de los proyectos sean diferentes. Se sugiere colocar como sufijo el nombre el usuario autetnocato.
+
+Ejemplo: si mi usuario es user1, el nombre del  proyecto debe quedar como nexus-**user1**. 
+ 
+
+![Crear Proyecto](img/create-project.png)
+
+* Dar clic en **Create** 
+
+
+
+
+
+
 Openshift proporciona varios mecanismos que permiten realizar el despliegue de las aplicaciones sobre la plataforma, con el animo de conocerlos desplegaremos  una aplicacion java que expone un Api Rest construida con Spring Boot.
 
 El repositorio de los fuentes es el siguiente:

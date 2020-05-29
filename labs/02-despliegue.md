@@ -30,9 +30,9 @@ Para el siguiente ejercicio vamos a desplegar mediente la consola web una aplica
 
 * Seleccionar la opción **Container Image**
 
-  * En el campo **Image name from external registry** diligenciar *sonatype/nexus*
-  * En la sección **Resources** se debe dejar seleccionado **Deployment Config** 
-  * Se debe dejar marcado el check *Create a route to the application* para que se cree la ruta que nos permitirá acceder al nexus. Se espera que los campos queden diligenciados de la siguiente manera:
+* En el campo **Image name from external registry** diligenciar *sonatype/nexus*
+* En la sección **Resources** se debe dejar seleccionado **Deployment Config** 
+* Se debe dejar marcado el check *Create a route to the application* para que se cree la ruta que nos permitirá acceder al nexus. Se espera que los campos queden diligenciados de la siguiente manera:
   
    ![Nexus app](img/nexus-app.png)
    

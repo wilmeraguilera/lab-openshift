@@ -48,7 +48,15 @@ Para el siguiente ejercicio vamos a desplegar mediente la consola web una aplica
  ![Logs Nexus](img/log-nexus-inicio.png)
 
  
-* Volvemos a la Opción **Topology** y damos clic en la fecha superior derecha de la aplicación y seremos redirigidos a la url de Nexus.
+* Volvemos a la Opción **Topology** y damos clic en la fecha superior derecha de la aplicación.
+
+![route](img/nexus-clic-route.png)
+
+* Seremos redirigidos a la url de Nexus.
+
+![Nexus Home](img/nexus-url-home.png)
+
+
 
  
 

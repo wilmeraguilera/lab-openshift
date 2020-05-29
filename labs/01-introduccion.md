@@ -29,8 +29,8 @@ TODO COMPLETAR
 
 
 ## Prerequisitos
-* Code Ready Containter instalado localmente o un ambiente de Openshift 4
-* Cliente oc instalado (Permite ehecutar comendos hacie al cluster de openshift)
+* Code Ready Container instalado localmente o un ambiente de Openshift 4
+* Cliente oc instalado (Permite ejecutar comandos hacia el cluster de Openshift)
 
  
 

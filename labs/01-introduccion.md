@@ -8,12 +8,25 @@ El presente laboratorios busca darle los conceptos básicos sobre la plataforma 
 
 CRC o Code Ready Containers es una instalación de Openshift 4 que puedes instalar localmente. Tecnicamente consiste en una Máquina virtual que contiene los componentes básicos de Openshift para realizar actividades de desarrollo sobre la plataforma.
 
+### Diferencias entre CRC y la instalación completa de Openshift
+
+
+* El clúster de CodeReady Containers OpenShift es efímero y no está destinado para uso en producción.
+* Utiliza un solo nodo que se comporta como un nodo **master** y un **worker**.
+* Inhabilita los operadores de **machine-config** y **monitoring** de forma predeterminada.
+* Estos operadores deshabilitados hacen que las partes correspondientes de la consola web no funcionen.
+* La instancia de OpenShift se ejecuta en una máquina virtual. Esto puede causar otras diferencias, particularmente con las redes externas.
+
+
 Para realizar la instalación de CRC por favor diríjase a la documentación oficial.
-https://access.redhat.com/documentation/en-us/red_hat_codeready_containers
+https://access.redhat.com/documentation/en-us/red_hat_codeready_containers, Ir a **Getting Started Guide**
 
 
 ## 1.2 Autenticación por consola
-Apara realiza 
+Openshift da la posibilidad de interactuar con la plataforma por línea de comando por medio del cliente oc. Para realizar la instalación del cliente oc por favor seguir las instrucciones descritas en la siguiente url.
+
+TODO COMPLETAR
+ 
 
 
 

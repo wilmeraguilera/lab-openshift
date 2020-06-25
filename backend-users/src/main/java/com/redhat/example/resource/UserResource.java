@@ -37,12 +37,12 @@ public class UserResource {
 	
 	@GetMapping("/healthcheck")
 	public String healthcheck() {
-		return appTitle + " - Status UP Modified!";
+		return appTitle + " - Status UP!";
 	}
 
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers() {
-		logger.info("COnsultar usuario");
+		logger.info("Consultar usuario");
 		List<User> users = userRepository.findAll();
 		
 		for(User user: users) {

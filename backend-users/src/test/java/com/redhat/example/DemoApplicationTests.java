@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.redhat.example.repository.UserRepository;
 import com.redhat.example.resource.UserResource;
 
+import java.net.UnknownHostException;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class DemoApplicationTests {
@@ -23,7 +25,7 @@ class DemoApplicationTests {
 	
 	
 	@Test
-	void healthCheck() {
+	void healthCheck() throws UnknownHostException {
 		userResource.healthcheck();
 	}
 

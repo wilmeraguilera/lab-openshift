@@ -1,6 +1,8 @@
 package com.redhat.example.resource;
 
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +38,9 @@ public class UserResource {
 	private String appTitle;
 	
 	@GetMapping("/healthcheck")
-	public String healthcheck() {
-		return appTitle + " - Status UP!";
+	public String healthcheck() throws UnknownHostException {
+		String ip = InetAddress.getLocalHost().getHostAddress();
+		return appTitle + " - Status UP! - from server IP:" + ip;
 	}
 
 	@GetMapping("/users")

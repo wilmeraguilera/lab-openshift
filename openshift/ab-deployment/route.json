@@ -14,13 +14,13 @@
     "to": {
       "kind": "Service",
       "name": "blue",
-      "weight": 90
+      "weight": 75
     },
     "alternateBackends": [
       {
         "kind": "Service",
         "name": "green",
-        "weight": 10
+        "weight": 25
       }
     ],
     "wildcardPolicy": "None"

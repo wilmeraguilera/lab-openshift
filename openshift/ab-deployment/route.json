@@ -1,0 +1,28 @@
+{
+  "apiVersion": "route.openshift.io/v1",
+  "kind": "Route",
+  "metadata": {
+    "labels": {
+      "app.kubernetes.io/part-of": "lab-openshift"
+    },
+    "name": "lab-openshift"
+  },
+  "spec": {
+    "port": {
+      "targetPort": "8080-tcp"
+    },
+    "to": {
+      "kind": "Service",
+      "name": "blue",
+      "weight": 90
+    },
+    "alternateBackends": [
+      {
+        "kind": "Service",
+        "name": "green",
+        "weight": 10
+      }
+    ],
+    "wildcardPolicy": "None"
+  }
+}

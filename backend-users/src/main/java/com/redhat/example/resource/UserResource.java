@@ -6,10 +6,12 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Optional;
 
+import com.redhat.example.entity.ResponseHealthCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +40,13 @@ public class UserResource {
 	private String appTitle;
 	
 	@GetMapping("/healthcheck")
-	public String healthcheck() throws UnknownHostException {
+	public ResponseEntity<ResponseHealthCheck> healthcheck() throws UnknownHostException {
 		String ip = InetAddress.getLocalHost().getHostAddress();
-		return appTitle + " - Status UP! - from server IP:" + ip;
+		ResponseHealthCheck responseHealthCheck = new ResponseHealthCheck();
+		responseHealthCheck.setAppTitle(appTitle);
+		responseHealthCheck.setIP(ip);
+		responseHealthCheck.setVersion("1.0");
+		return new ResponseEntity<ResponseHealthCheck>(responseHealthCheck, HttpStatus.OK);
 	}
 
 	@GetMapping("/users")

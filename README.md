@@ -10,7 +10,7 @@ y conocer las alternativas que se tienen para realizar este proceso. Adicionalme
 3. [Volúmenes Persistentes](labs/03.volumenes.md)
 4. [ConfigMaps y Secrets](labs/04.config_maps-secrets.md)
 5. [Estrategias de Despliegue](labs/05.estrategias-despliegue.md)
-6. [Estrategias de Despliegue basados en Route](labs/06.estrategias-despliegue-router.md)
+
 
 
 

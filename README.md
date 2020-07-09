@@ -1,7 +1,7 @@
 # Workshop Openshift 4
 
 Este Workshop tiene como propósito conocer la plataforma Openshift orientado al despliegue de aplicaciones 
-y conocer las alternativas que se tienen para realizar este proceso. Adicionalmente se habla de otros recursos de openshift como configmaps y  volumenes persistentes.
+y conocer las alternativas que se tienen para realizar este proceso. Adicionalmente se habla de otros recursos de Openshift como configmaps, secrets y  volúmenes persistentes.
 
 ## Tabla de Contenido
 

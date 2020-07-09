@@ -1,9 +1,9 @@
-package com.redhat.example.repository;
+package org.company.example.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.redhat.example.entity.User;
+import org.company.example.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

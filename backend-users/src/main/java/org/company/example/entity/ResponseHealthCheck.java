@@ -1,4 +1,4 @@
-package com.redhat.example.entity;
+package org.company.example.entity;
 
 public class ResponseHealthCheck {
 

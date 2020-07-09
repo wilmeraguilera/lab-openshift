@@ -1,4 +1,4 @@
-package com.redhat.example.entity;
+package org.company.example.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

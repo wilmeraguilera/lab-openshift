@@ -1,4 +1,4 @@
-package com.redhat.example.resource;
+package org.company.example.resource;
 
 import java.net.InetAddress;
 import java.net.URI;
@@ -6,7 +6,9 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Optional;
 
-import com.redhat.example.entity.ResponseHealthCheck;
+import org.company.example.entity.ResponseHealthCheck;
+import org.company.example.exception.UserNotFoundException;
+import org.company.example.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.redhat.example.entity.User;
-import com.redhat.example.exception.UserNotFoundException;
-import com.redhat.example.repository.UserRepository;
-
+import org.company.example.entity.User;
 
 
 @RestController

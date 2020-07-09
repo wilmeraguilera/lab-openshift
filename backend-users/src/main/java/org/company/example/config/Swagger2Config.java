@@ -1,4 +1,4 @@
-package com.redhat.example.config;
+package org.company.example.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

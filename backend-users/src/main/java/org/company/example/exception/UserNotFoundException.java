@@ -1,4 +1,4 @@
-package com.redhat.example.exception;
+package org.company.example.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

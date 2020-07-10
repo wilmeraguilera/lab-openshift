@@ -19,14 +19,14 @@ public class Swagger2Config {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
             .apis(RequestHandlerSelectors
-                .basePackage("com.redhat.example.resource"))
+                .basePackage("org.company.example.resource"))
             .paths(PathSelectors.regex("/.*"))
             .build().apiInfo(apiEndPointsInfo());
     }
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Users REST API")
             .description("Users REST API")
-            .contact(new Contact( "Wilmer ", "www.redhat.com", "waguiler@redhat.com"))
+            .contact(new Contact( "Wilmer ", "", "wilmeraguilerab@gmail.com"))
             .license("Apache 2.0")
             .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
             .version("1.0.1")

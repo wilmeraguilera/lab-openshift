@@ -11,7 +11,7 @@ def namespace_dev ='terpel-dcem-dev-appterpel'
 def namespace_qa = 'terpel-dcem-qa-appterpel'
 def namespace_prod = 'terpel-dcem-qa-appterpel'
 def appName = 'paciente-hc'
-def context_dir =' '
+def context_dir =''
 
 
 
@@ -64,7 +64,7 @@ pipeline {
 
 
           //Calcular variable en caso de directorio interno en el git
-          var_context_dir = "${params.context_dir}"
+          var_context_dir = "${context_dir}"
           if (var_context_dir?.trim()){
             var_context_dir = "${env.WORKSPACE}/var_context_dir";
           }else{

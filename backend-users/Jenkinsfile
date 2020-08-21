@@ -7,11 +7,11 @@ def isRelease
 def var_context_dir
 
 
-def namespace_dev ='terpel-dcem-dev-appterpel'
-def namespace_qa = 'terpel-dcem-qa-appterpel'
-def namespace_prod = 'terpel-dcem-qa-appterpel'
-def appName = 'paciente-hc'
-def context_dir ='backend-users/'
+def namespace_dev ="terpel-dcem-dev-appterpel"
+def namespace_qa = "terpel-dcem-qa-appterpel"
+def namespace_prod = "terpel-dcem-qa-appterpel"
+def appName = "paciente-hc"
+def context_dir ="backend-users"
 
 
 

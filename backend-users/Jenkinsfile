@@ -16,7 +16,7 @@ def context_dir ="backend-users"
 
 
 //Constantes
-def CONFIG_FILE_NAME="application.yml"
+def CONFIG_FILE_NAME="application.properties"
 
 /*
 podTemplate(

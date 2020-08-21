@@ -11,7 +11,7 @@ def namespace_dev ='terpel-dcem-dev-appterpel'
 def namespace_qa = 'terpel-dcem-qa-appterpel'
 def namespace_prod = 'terpel-dcem-qa-appterpel'
 def appName = 'paciente-hc'
-def context_dir =''
+def context_dir =' '
 
 
 

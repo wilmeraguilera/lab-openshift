@@ -7,9 +7,8 @@ def isRelease
 def var_context_dir
 
 
-def namespace_dev ="terpel-dcem-dev-appterpel"
-def namespace_qa = "terpel-dcem-qa-appterpel"
-def namespace_prod = "terpel-dcem-qa-appterpel"
+def namespace_dev ="dev-admin-users"
+def namespace_qa = "qa-admin-users"
 def appName = "api-users"
 def context_dir ="backend-users"
 

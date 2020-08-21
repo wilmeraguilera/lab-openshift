@@ -66,7 +66,7 @@ pipeline {
           //Calcular variable en caso de directorio interno en el git
           var_context_dir = "${context_dir}"
           if (var_context_dir?.trim()){
-            var_context_dir = "${env.WORKSPACE}/var_context_dir";
+            var_context_dir = "${env.WORKSPACE}/${var_context_dir}";
           }else{
             var_context_dir = "${env.WORKSPACE}";
           }

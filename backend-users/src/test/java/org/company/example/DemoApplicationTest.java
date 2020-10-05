@@ -22,7 +22,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DemoApplicationTests {
+public class DemoApplicationTest {
 	
 	@Autowired
 	UserResource userResource;
@@ -30,7 +30,7 @@ public class DemoApplicationTests {
 	@MockBean
 	UserRepository userRepository;
 
-	public DemoApplicationTests() {
+	public DemoApplicationTest() {
 		super();
 
 	}

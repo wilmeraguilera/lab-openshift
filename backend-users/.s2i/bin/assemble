@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Before assemble"
 echo "Before copy"
-cp -Rf openshift ./
+cp -Rf /tmp/src/openshift ./
 echo "After copy"
 echo "before ls"
 ls

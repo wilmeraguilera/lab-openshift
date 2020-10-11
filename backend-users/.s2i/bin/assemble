@@ -1,4 +1,5 @@
 #!/bin/bash
 echo "Before assemble"
+echo "Before 2 assemble"
 exec /usr/local/s2i/assemble
 echo "Post Assemble"

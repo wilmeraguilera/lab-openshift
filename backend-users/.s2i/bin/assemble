@@ -2,7 +2,7 @@
 echo "Before assemble"
 echo "Before copy"
 ls /tmp/src/
-cp -r /tmp/src/configuration /deployments/test/
+cp -r /tmp/src/src /deployments/test/
 echo "After copy"
 echo "before ls"
 ls

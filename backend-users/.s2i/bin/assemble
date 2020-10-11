@@ -1,13 +1,13 @@
 #!/bin/bash
 echo "Before assemble"
 echo "Before copy"
-run cp -Rf openshift ./
+cp -Rf openshift ./
 echo "After copy"
 echo "before ls"
-run ls
+ls
 echo "After ls"
 echo "before pwd"
-run pwd
+pwd
 echo "After pwd"
 exec /usr/local/s2i/assemble
 echo "Post Assemble"

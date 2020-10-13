@@ -140,7 +140,7 @@ pipeline {
         script {
           echo "Init Build Image"
           dir(var_context_dir) {
-            openshift.withCluster() {
+            openshift.withCluster("ocp-pruebas") {
               openshift.verbose()
               openshift.withProject("${namespace_dev}") {
                 openshift.selector("bc", "${appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")

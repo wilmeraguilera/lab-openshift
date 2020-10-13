@@ -30,6 +30,8 @@ pipeline {
   tools {
     maven 'M2-3.6.3'
     jdk 'JDK18'
+    oc 'oc-client'
+
   }
 
 
@@ -140,13 +142,15 @@ pipeline {
         script {
           echo "Init Build Image"
           dir(var_context_dir) {
-            openshift.withCluster("ocp-pruebas") {
-              openshift.verbose()
-              openshift.withProject("${namespace_dev}") {
-                openshift.selector("bc", "${appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")
-                openshift.tag("${appName}:latest", "${appName}:${tagImage}")
-              }
-            }
+
+                openshift.withCluster("ocp-pruebas") {
+                  openshift.verbose()
+                  openshift.withProject("${namespace_dev}") {
+                    openshift.selector("bc", "${appName}").startBuild("--from-file=./target/${nameJar}", "--wait=true")
+                    openshift.tag("${appName}:latest", "${appName}:${tagImage}")
+                  }
+                }
+
           }
           echo "End Build Image"
         }

@@ -6,7 +6,7 @@
     <mirror>
       <id>nexus</id>
       <name>Nexus Public Mirror</name>
-      <url>http://nexus3-nexus.apps-crc.testing/repository/maven-public/</url>
+      <url>http://nexus3-devops.apps.shared-na4.na4.openshift.opentlc.com/repository/maven-public</url>
       <mirrorOf>*</mirrorOf>
     </mirror>
   </mirrors>
@@ -14,7 +14,7 @@
     <server>
       <id>nexus</id>
       <username>admin</username>
-      <password>admin</password>
+      <password>admin123</password>
     </server>
     <server>
       <id>nexus-srv-releases</id>

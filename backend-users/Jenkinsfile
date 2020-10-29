@@ -123,7 +123,7 @@ pipeline {
     stage("Security Scan"){
         steps {
             script{
-                def imageLine = 'dev-admin-users/api-users'
+                def imageLine = 'image-registry.openshift-image-registry.svc:5000/dev-admin-users/api-users'
                 writeFile file: 'anchore_images', text: imageLine
                 anchore name: 'anchore_images'
             }

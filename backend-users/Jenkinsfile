@@ -120,15 +120,7 @@ pipeline {
     }*/
 
 
-    stage("Security Scan"){
-        steps {
-            script{
-                def imageLine = 'image-registry.openshift-image-registry.svc:5000/dev-admin-users/api-users'
-                writeFile file: 'anchore_images', text: imageLine
-                anchore name: 'anchore_images'
-            }
-        }
-    }
+
 
     stage("Publish to Nexus") {
       steps {
@@ -163,6 +155,16 @@ pipeline {
         }
       }
     }
+
+    stage("Security Scan"){
+            steps {
+                script{
+                    def imageLine = 'image-registry.openshift-image-registry.svc:5000/dev-admin-users/api-users'
+                    writeFile file: 'anchore_images', text: imageLine
+                    anchore name: 'anchore_images'
+                }
+            }
+        }
 
     stage("Deploy DEV") {
       steps {

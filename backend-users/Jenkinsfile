@@ -119,6 +119,17 @@ pipeline {
 
     }*/
 
+
+    stage("Security Scan"){
+        steps {
+            script{
+                def imageLine = 'debian:latest'
+                writeFile file: 'anchore_images', text: imageLine
+                anchore name: 'anchore_images'
+            }
+        }
+    }
+
     stage("Publish to Nexus") {
       steps {
         echo "Init Publish to Nexus"

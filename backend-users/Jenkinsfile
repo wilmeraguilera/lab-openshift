@@ -23,9 +23,9 @@ pipeline {
 
   agent any
 
-  //agent {
-  //    label "maven-appdev"
-  //}
+  agent {
+      label "maven"
+  }
 
   tools {
     maven 'M2-3.6.3'

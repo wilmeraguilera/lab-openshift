@@ -21,7 +21,7 @@ def CONFIG_FILE_NAME="application.properties"
 
 pipeline {
 
-  agent any
+  //agent any
 
   agent {
       label "maven"

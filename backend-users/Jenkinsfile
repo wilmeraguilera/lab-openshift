@@ -40,8 +40,8 @@ pipeline {
         echo "Init Checkout Source Code"
         checkout scm
         script {
-          echo "Path: ${PATH}"
-          echo "M2_HOME = ${M2_HOME}"
+          //echo "Path: ${PATH}"
+          //echo "M2_HOME = ${M2_HOME}"
           sh 'java -version'
 
 

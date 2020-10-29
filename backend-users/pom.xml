@@ -7,19 +7,24 @@
 	<groupId>org.company</groupId>
 	<artifactId>backend-users</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
+
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.5.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<groupId>dev.snowdrop</groupId>
+		<artifactId>snowdrop-dependencies</artifactId>
+		<version>2.2.10.Final-redhat-00001</version>
 	</parent>
+
 	<name>backend-users</name>
 	<description>BackEnd Users for Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
 		<fabric8.mode>openshift</fabric8.mode>
+		<spring-boot-maven-plugin.version>2.2.10.RELEASE</spring-boot-maven-plugin.version>
 	</properties>
+
+
 
 	<dependencies>
 		<dependency>
@@ -96,6 +101,16 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<redeploy>true</redeploy>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -131,6 +146,16 @@
 		        <artifactId>sonar-maven-plugin</artifactId>
 		        <version>3.7.0.1746</version>
 		     </plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<parameters>true</parameters>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
 
 		</plugins>
 

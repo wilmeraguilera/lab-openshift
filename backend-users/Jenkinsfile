@@ -26,12 +26,12 @@ pipeline {
   agent {
       label "maven"
   }
-
+/*
   tools {
     maven 'M2-3.6.3'
     jdk 'JDK18'
   }
-
+*/
 
   stages {
 

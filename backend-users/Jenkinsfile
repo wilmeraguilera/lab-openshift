@@ -108,7 +108,7 @@ pipeline {
         dir(var_context_dir) {
           withSonarQubeEnv('sonar') {
             sh "mvn sonar:sonar " +
-                    "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml "
+                    "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings-maven.xml "
           }
           sleep(10)
           timeout(time: 1, unit: 'HOURS') {

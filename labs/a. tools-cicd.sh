@@ -1,7 +1,10 @@
-#oc delete project devops
-#sleep 30
+oc delete project devops
+oc delete project anchore
+sleep 40
 oc new-project devops
-oadm policy add-scc-to-user anyuid -z default
+oc new-project anchore
+oadm policy add-scc-to-user anyuid -z default -n anchore
+oadm policy add-scc-to-user anyuid -z default -n devops
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=5Gi --param DISABLE_ADMINISTRATIVE_MONITORS=true
 oc adm policy add-cluster-role-to-user edit system:serviceaccount:devops:jenkins
 

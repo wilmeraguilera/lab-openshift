@@ -136,11 +136,52 @@
           "gate": "vulnerabilities",
           "trigger_id": "CVE-2020-15999+*",
           "id": "rule2"
-        }
-      ,
+        },
         {
           "gate": "vulnerabilities",
           "trigger_id": "CVE-2020-14363+*",
+          "id": "rule2"
+        },
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2017-18640+*",
+          "id": "rule2"
+        },
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2020-14878+*",
+          "id": "rule2"
+        }
+
+      ,
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2020-14828+*",
+          "id": "rule2"
+        },
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2011-5034+*",
+          "id": "rule2"
+        },
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2020-15777+*",
+          "id": "rule2"
+        },
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2017-18640*",
+          "id": "rule2"
+        },
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2020-14828+*",
+          "id": "rule2"
+        },
+        {
+          "gate": "vulnerabilities",
+          "trigger_id": "CVE-2020-10683+*",
           "id": "rule2"
         }
       ],

@@ -8,3 +8,6 @@ anchore-cli registry add --insecure  image-registry.openshift-image-registry.svc
 
 ##list Images
 anchore-cli image list
+
+anchore-cli policy add my-policy-anchore.json
+anchore-cli policy activate 2c53a13c-1765-11e8-82ef-23527761d061

@@ -130,9 +130,9 @@ pipeline {
         dir(var_context_dir) {
           script {
               if (isRelease){
-                sh "mvn -s ./configuration/settings-maven.xml deploy -DskipTests=true  -DaltDeploymentRepository=nexus::default::http://nexus3-devops.apps-crc.testing/repository/maven-releases"
+                sh "mvn -s ./configuration/settings-maven.xml deploy -DskipTests=true  -DaltDeploymentRepository=nexus::default::http://nexus3.devops.svc.cluster.local:8081/repository/maven-releases"
               }else{
-                sh "mvn -s ./configuration/settings-maven.xml deploy -DskipTests=true  -DaltDeploymentRepository=nexus::default::http://nexus3-devops.apps-crc.testing/repository/maven-snapshots"
+                sh "mvn -s ./configuration/settings-maven.xml deploy -DskipTests=true  -DaltDeploymentRepository=nexus::default::http://nexus3.devops.svc.cluster.local:8081/repository/maven-snapshots"
               }
           }
         }

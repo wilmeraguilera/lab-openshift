@@ -136,6 +136,8 @@ objects:
       host: ${HOSTNAME}
       to:
         name: ${APPLICATION_NAME}
+      tls:
+        termination: edge
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:

@@ -1,6 +1,6 @@
 export NAMESPACE_DEV=dev-admin-users
 export NAMESPACE_QA=qa-admin-users
-export NAMESPACE_JENKIS=devops
+export NAMESPACE_JENKIS=devops-tools
 export NAME_APP=api-users
 export CONFIG_FILE_NAME=application.yml
 

@@ -158,16 +158,6 @@ pipeline {
       }
     }
 
-    stage("Security Scan"){
-            steps {
-                script{
-                    def imageLine = "image-registry.openshift-image-registry.svc:5000/dev-admin-users/api-users:${tagImage}"
-                    writeFile file: 'anchore_images', text: imageLine
-                    anchore engineRetries: '600', name: 'anchore_images'
-                }
-            }
-        }
-
     stage("Deploy DEV") {
       steps {
         script {

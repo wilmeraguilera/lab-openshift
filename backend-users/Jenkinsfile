@@ -80,7 +80,7 @@ pipeline {
       }
     }
 
-    stage("Build") {
+    stage("Build Artifact") {
           steps {
             echo "Init Build"
             //Only apply the next instruction if you have the code in a subdirectory

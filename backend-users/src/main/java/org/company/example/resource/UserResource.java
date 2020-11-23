@@ -48,6 +48,16 @@ public class UserResource {
 		return new ResponseEntity<ResponseHealthCheck>(responseHealthCheck, HttpStatus.OK);
 	}
 
+	@GetMapping("/healthcheck2")
+	public ResponseEntity<ResponseHealthCheck> healthcheck2() throws UnknownHostException {
+		String ip = InetAddress.getLocalHost().getHostAddress();
+		ResponseHealthCheck responseHealthCheck = new ResponseHealthCheck();
+		responseHealthCheck.setAppTitle(appTitle);
+		responseHealthCheck.setIP(ip);
+		responseHealthCheck.setVersion("1.1");
+		return new ResponseEntity<ResponseHealthCheck>(responseHealthCheck, HttpStatus.OK);
+	}
+
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers() {
 		logger.info("Consultar usuario");

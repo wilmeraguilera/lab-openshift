@@ -35,7 +35,50 @@ pipeline {
 
   stages {
 
+    stage("Checkout Source Code") {
+          steps {
+            echo "Init Checkout Source Code"
+            checkout scm
+            script {
+              //echo "Path: ${PATH}"
+              //echo "M2_HOME = ${M2_HOME}"
+              sh 'java -version'
 
+
+              //Calcular variable en caso de directorio interno en el git
+              var_context_dir = "${context_dir}"
+              if (var_context_dir?.trim()){
+                var_context_dir = "${env.WORKSPACE}/${var_context_dir}";
+              }else{
+                var_context_dir = "${env.WORKSPACE}";
+              }
+
+
+
+              echo "Directorio: ${var_context_dir}"
+
+              dir(var_context_dir) {
+                //Obtener version del artefacto
+                def pom = readMavenPom file: 'pom.xml'
+                tagImage = pom.version + "-" + currentBuild.number
+
+                artifactName = pom.artifactId
+                artifactVersion = pom.version
+                nameJar = artifactName + "-" + artifactVersion + ".jar"
+
+                //Identificar si es snapshot o release
+                isRelease = !artifactVersion.contains ('SNAPSHOT')
+
+                if (isRelease){
+                    echo "Es version release: "+ artifactVersion
+                }else{
+                    echo "Es version Snapshot: "+ artifactVersion
+                }
+              }
+            }
+            echo "end Checkout Source Code"
+          }
+        }
 
     stage("Config Dev Environment") {
         		steps {

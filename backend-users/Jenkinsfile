@@ -188,6 +188,7 @@ pipeline {
       steps {
         script {
           echo "Init Deploy Image to QA Environment"
+          input "Deploy to qa?"
           dir(var_context_dir) {
             openshift.withCluster() {
               openshift.withProject("${namespace_qa}") {

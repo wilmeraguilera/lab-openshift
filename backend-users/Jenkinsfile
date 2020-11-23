@@ -90,5 +90,32 @@ pipeline {
             echo "End Build"
           }
     }
+
+    stage("Unit Test") {
+          steps {
+            echo "Init Unit Test"
+            dir(var_context_dir) {
+              sh "mvn test -s ./configuration/settings-maven.xml"
+            }
+            echo "End Unit Test"
+          }
+        }
+
+
+        stage('SonarQube Scan') {
+          steps {
+            dir(var_context_dir) {
+              withSonarQubeEnv('sonar') {
+                sh "mvn sonar:sonar " +
+                        "-Dsonar.java.coveragePlugin=jacoco -Dsonar.junit.reportsPath=target/surefire-reports  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -s ./configuration/settings-maven.xml "
+              }
+              sleep(10)
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+
+        }
   }
 }

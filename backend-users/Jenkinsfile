@@ -151,5 +151,70 @@ pipeline {
                 }
               }
             }
+
+    stage("Deploy DEV") {
+      steps {
+        script {
+          echo "Init Deploy Image to DEV Environment"
+          dir(var_context_dir) {
+            openshift.withCluster() {
+                openshift.verbose()
+                openshift.withProject("${namespace_dev}") {
+
+                openshift.selector("configmap", "config-${appName}").delete(" --ignore-not-found=true " )
+                openshift.create("configmap", "config-${appName}", "--from-file=./src/main/resources/${CONFIG_FILE_NAME}")
+                openshift.set("image", "dc/${appName}", "${appName}=${namespace_dev}/${appName}:${tagImage}", " --source=imagestreamtag")
+                openshift.selector("dc", "${appName}").rollout().latest();
+                sleep 2
+
+                // Wait for application to be deployed
+                def dc = openshift.selector("dc", "${appName}").object()
+                def dc_version = dc.status.latestVersion
+                def rc = openshift.selector("rc", "${appName}-${dc_version}").object()
+                echo "Waiting for ReplicationController ${appName}-${dc_version} to be ready"
+                while (rc.spec.replicas != rc.status.readyReplicas) {
+                  sleep 10
+                  rc = openshift.selector("rc", "${appName}-${dc_version}").object()
+                }
+              }
+            }
+          }
+          echo "End Deploy Image to DEV Environment"
+        }
+      }
+    }
+
+    stage("Deploy QA") {
+      steps {
+        script {
+          echo "Init Deploy Image to QA Environment"
+          dir(var_context_dir) {
+            openshift.withCluster() {
+              openshift.withProject("${namespace_qa}") {
+                openshift.selector("configmap", "config-${appName}").delete(" --ignore-not-found=true ")
+                openshift.create("configmap", "config-${appName}", "--from-file=./src/main/resources/${CONFIG_FILE_NAME}")
+                openshift.set("image", "dc/${appName}", "${appName}=${namespace_dev}/${appName}:${tagImage}", " --source=imagestreamtag")
+
+                // Deploy the development application.
+                openshift.selector("dc", "${appName}").rollout().latest();
+                sleep 2
+
+                // Wait for application to be deployed
+                def dc = openshift.selector("dc", "${appName}").object()
+                def dc_version = dc.status.latestVersion
+                def rc = openshift.selector("rc", "${appName}-${dc_version}").object()
+
+                echo "Waiting for ReplicationController ${appName}-${dc_version} to be ready"
+                while (rc.spec.replicas != rc.status.readyReplicas) {
+                  sleep 10
+                  rc = openshift.selector("rc", "${appName}-${dc_version}").object()
+                }
+              }
+            }
+          }
+          echo "End Deploy Image to QA Environment"
+        }
+      }
+    }
   }
 }

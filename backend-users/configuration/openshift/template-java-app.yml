@@ -1,0 +1,149 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+message: Aplicacion Java para Keralty
+metadata:
+  annotations:
+    description: Template para creación de aplicaciones Java para Keralty
+    openshift.io/display-name: OpenJDK
+  labels:
+    template: keralty-openjdk
+  name: keralty-openjdk
+objects:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        description: The application's http port.
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      ports:
+        - port: 8080
+          targetPort: 8080
+      selector:
+        deploymentConfig: ${APPLICATION_NAME}
+  - apiVersion: v1
+    id: ${APPLICATION_NAME}-http
+    kind: Route
+    metadata:
+      annotations:
+        description: Route for application's http service.
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      to:
+        name: ${APPLICATION_NAME}
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+      name: config-${APPLICATION_NAME}
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${APPLICATION_NAME}:latest
+      source:
+        type: Binary
+      strategy:
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            name: java:${JAVA_VERSION}
+            namespace: openshift
+        type: Source
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      replicas: 1
+      triggers: []
+      selector:
+        deploymentConfig: ${APPLICATION_NAME}
+      strategy:
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            application: ${APPLICATION_NAME}
+            deploymentConfig: ${APPLICATION_NAME}
+          name: ${APPLICATION_NAME}
+        spec:
+          containers:
+            - env: []
+              image: ${APPLICATION_NAME}
+              imagePullPolicy: Always
+              name: ${APPLICATION_NAME}
+              ports:
+                - containerPort: 8778
+                  name: jolokia
+                  protocol: TCP
+                - containerPort: 8080
+                  name: http
+                  protocol: TCP
+                - containerPort: 8443
+                  name: https
+                  protocol: TCP
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /actuator/health
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 60
+                periodSeconds: 20
+                successThreshold: 1
+                timeoutSeconds: 1
+                readinessProbe:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /actuator/health
+                    port: 8080
+                    scheme: HTTP
+                  initialDelaySeconds: 40
+                  periodSeconds: 20
+                  successThreshold: 1
+                  timeoutSeconds: 1
+              volumeMounts:
+                - mountPath: /deployments/config/${CONFIG_FILE_NAME}
+                  name: map-${APPLICATION_NAME}
+                  subPath: ${CONFIG_FILE_NAME}
+          volumes:
+            - configMap:
+                defaultMode: 420
+                name: config-${APPLICATION_NAME}
+              name: map-${APPLICATION_NAME}
+parameters:
+  - description: The name for the application.
+    displayName: Nombre de la aplicación
+    name: APPLICATION_NAME
+    required: true
+    value: openjdk-app
+  - description: Nombre del archivo de configuración como application.properties o application.yml
+    displayName: Nombre del archivo de configuración
+    name: CONFIG_FILE_NAME
+    required: true
+    value: application.properties
+  - description: Versión del OpenJDK
+    displayName: Versión del OpenJDK (8 - 11)
+    name: JAVA_VERSION
+    required: true
+    value: '8'

@@ -89,8 +89,8 @@ pipeline {
                                    openshift.withProject("${namespace_dev}") {
 
                                         echo "ConfigFile Name ${CONFIG_FILE_NAME}"
-
-
+                                        def models = openshift.process( "-f configuration/openshift/template-java-app.yml -p APPLICATION_NAME=${appName}  -p JAVA_VERSION=${jdkVersionImage} -p CONFIG_FILE_NAME=${CONFIG_FILE_NAME}" )
+                                        openshift.apply( models )
 
                                    }
                             }

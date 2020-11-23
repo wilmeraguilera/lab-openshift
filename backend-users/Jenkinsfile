@@ -87,7 +87,7 @@ pipeline {
                             openshift.withCluster() {
                                    openshift.withProject("${namespace_dev}") {
 
-                                        echo "ConfigFile Name ${config_file_name}"
+                                        echo "ConfigFile Name ${CONFIG_FILE_NAME}"
 
 
 

@@ -33,7 +33,7 @@ public class UserResource {
 	private Logger logger = LoggerFactory.getLogger(UserResource.class);
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository1 userRepository;
 	
 	@Value("${app.title}")
 	private String appTitle;

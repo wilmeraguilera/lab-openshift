@@ -11,7 +11,7 @@ def namespace_dev ="dev-admin-users"
 def namespace_qa = "qa-admin-users"
 def appName = "api-users"
 def context_dir ="backend-users"
-def  jdkVersionImage ="8"
+def jdkVersionImage = "8"
 
 
 

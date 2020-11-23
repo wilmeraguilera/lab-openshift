@@ -79,5 +79,16 @@ pipeline {
         echo "end Checkout Source Code"
       }
     }
+
+    stage("Build") {
+          steps {
+            echo "Init Build"
+            //Only apply the next instruction if you have the code in a subdirectory
+            dir(var_context_dir) {
+              sh "mvn -Dmaven.test.skip=true compile -s ./configuration/settings-maven.xml "
+            }
+            echo "End Build"
+          }
+    }
   }
 }

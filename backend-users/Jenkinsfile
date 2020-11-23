@@ -1,0 +1,83 @@
+//Variables del proceso
+def tagImage
+def artifactName
+def artifactVersion
+def nameJar
+def isRelease
+def var_context_dir
+
+
+def namespace_dev ="dev-admin-users"
+def namespace_qa = "qa-admin-users"
+def appName = "api-users"
+def context_dir ="backend-users"
+
+
+
+
+//Constantes
+def CONFIG_FILE_NAME="application.properties"
+
+
+pipeline {
+
+  //agent any
+
+  agent {
+      label "maven"
+  }
+/*
+  tools {
+    maven 'M2-3.6.3'
+    jdk 'JDK18'
+  }
+*/
+
+  stages {
+
+    stage("Checkout Source Code") {
+      steps {
+        echo "Init Checkout Source Code"
+        checkout scm
+        script {
+          //echo "Path: ${PATH}"
+          //echo "M2_HOME = ${M2_HOME}"
+          sh 'java -version'
+
+
+          //Calcular variable en caso de directorio interno en el git
+          var_context_dir = "${context_dir}"
+          if (var_context_dir?.trim()){
+            var_context_dir = "${env.WORKSPACE}/${var_context_dir}";
+          }else{
+            var_context_dir = "${env.WORKSPACE}";
+          }
+
+
+
+          echo "Directorio: ${var_context_dir}"
+
+          dir(var_context_dir) {
+            //Obtener version del artefacto
+            def pom = readMavenPom file: 'pom.xml'
+            tagImage = pom.version + "-" + currentBuild.number
+
+            artifactName = pom.artifactId
+            artifactVersion = pom.version
+            nameJar = artifactName + "-" + artifactVersion + ".jar"
+
+            //Identificar si es snapshot o release
+            isRelease = !artifactVersion.contains ('SNAPSHOT')
+
+            if (isRelease){
+                echo "Es version release: "+ artifactVersion
+            }else{
+                echo "Es version Snapshot: "+ artifactVersion
+            }
+          }
+        }
+        echo "end Checkout Source Code"
+      }
+    }
+  }
+}
